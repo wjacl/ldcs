@@ -80,7 +80,7 @@
   		<property name="basenames">
   			<array>
   				<value>i18n.message</value>
-  				<value>i18n.edu_message</value>
+  				<value>i18n.ldcs_message</value>
   			</array>
   		</property>
 	</bean> 
