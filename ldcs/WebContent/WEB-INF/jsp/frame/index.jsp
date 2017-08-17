@@ -38,6 +38,25 @@
 			});
 		}
 	}
+	
+	function login(xhr){
+		$('#loginDialog').dialog({
+		    title: '请登录',
+		    width: 600,
+		    height: 400,
+		    closed: false,
+		    cache: false,
+		    href: xhr.responseText,
+		    modal: true,
+		    extractor : function(data) {
+				data = $.fn.panel.defaults.extractor(data);
+				var tmp = $('<div></div>').html(data);
+				data = tmp.find('#content').html();
+				tmp.remove();
+				return data;
+			} 
+		});
+	}
 </script>
 <style type="text/css">
 .tree-title {
@@ -273,6 +292,7 @@
 				</div>
 		</div>
 	</div>
+	<div id="loginDialog"></div>
 </body>
 </html>
 

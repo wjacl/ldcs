@@ -10,7 +10,7 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/frame/header.jsp"%>
-
+		<div style="width:400px;height:300px;margin: auto;position: absolute;top:0;left:0;bottom: 0;right:0;">
 			<h2>
 				<s:message code="login.title" />
 			</h2>
@@ -52,7 +52,7 @@
 			        });
 	    		</script>
 			</div>
-
+		</div>
 
 	<%@ include file="/WEB-INF/jsp/frame/footer.jsp"%>
 </body>

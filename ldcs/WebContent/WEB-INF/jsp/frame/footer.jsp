@@ -47,6 +47,7 @@
 	</c:if>
 	</div>
 	</div>
+	<div id="loginDialog"></div>
 	<div id="footer" class="content text-centered">
 		<div>Copyright © 2008-2016 www.edu.com</div>
 	</div>

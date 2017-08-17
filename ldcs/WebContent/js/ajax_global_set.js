@@ -7,22 +7,27 @@ $.ajaxSetup({traditional:true});
 $( document ).ajaxComplete(function( event, xhr, settings ) {
 	
 	if(xhr.status == 401){ //未认证
-		$('#dd').dialog({
-		    title: '请登录',
-		    width: 600,
-		    height: 500,
-		    closed: false,
-		    cache: false,
-		    href: xhr.responseText,
-		    modal: true,
-		    extractor : function(data) {
-				data = $.fn.panel.defaults.extractor(data);
-				var tmp = $('<div></div>').html(data);
-				data = tmp.find('#content').html();
-				tmp.remove();
-				return data;
-			} 
-		});
+		if(document.getElementById('loginDialog')) {
+			$('#loginDialog').dialog({
+			    title: '请登录',
+			    width: 600,
+			    height: 400,
+			    closed: false,
+			    cache: false,
+			    href: xhr.responseText,
+			    modal: true,
+			    extractor : function(data) {
+					data = $.fn.panel.defaults.extractor(data);
+					var tmp = $('<div></div>').html(data);
+					data = tmp.find('#content').html();
+					tmp.remove();
+					return data;
+				} 
+			});
+		}
+		else {
+			window.parent.login(xhr);
+		}
 	}
 	else if(xhr.status == 403){//没有权限
 		$.messager.alert('警告','您没有权限进行此项操作！','warning');
