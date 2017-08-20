@@ -46,5 +46,7 @@ var I18N = {
 	validator_minLength:"请输入最少 {0} 个字符",
 	validator_maxLength:"请输入不超过 {0} 个字符",
 	validator_exits:"已存在！",
-	validator_select:"请选择！"
+	validator_select:"请选择！",
+	
+	liver:"主播"
 }

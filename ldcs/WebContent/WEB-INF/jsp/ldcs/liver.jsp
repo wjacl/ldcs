@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/WEB-INF/jsp/frame/comm_css_js.jsp"%>
+	<script type="text/javascript" src="${ctx }/js/app/system/org_user_tree.js"></script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/frame/header.jsp"%>
@@ -15,21 +16,55 @@
 	
 	<div id="liver_tb" style="padding: 5px; height: auto">
 		<div style="margin-bottom: 5px">
-			<a href="javascript:$.ad.toAdd('liver_w',I18N.liver,'liver_add','${ctx }/liver/add');" class="easyui-linkbutton easyui-tooltip" title="<s:message code='comm.add' />"
-				iconCls="icon-add" plain="true"></a> 
+			<a href="javascript:$.ad.toAdd('liver_w',I18N.liver,'liver_add','${ctx }/liver/add');" class="easyui-linkbutton"
+				iconCls="icon-add" plain="true"><s:message code='comm.add' /></a> 
 			<a href="javascript:$.ad.toUpdate('liver_grid','liver_w',I18N.liver,'liver_add','${ctx }/liver/update');liverUpdate()"
-				class="easyui-linkbutton easyui-tooltip" title="<s:message code='comm.update' />" iconCls="icon-edit" plain="true"></a>
-			<a href="javascript:$.ad.doDelete('liver_grid','${ctx }/liver/remove')" class="easyui-linkbutton easyui-tooltip" title="<s:message code='comm.remove' />" iconCls="icon-remove"
-				plain="true"></a>
+				class="easyui-linkbutton" iconCls="icon-edit" plain="true"><s:message code='comm.update' /></a>
+			<a href="javascript:$.ad.doDelete('liver_grid','${ctx }/liver/delete')" class="easyui-linkbutton" iconCls="icon-remove"
+				plain="true"><s:message code='comm.remove' /></a>
 		</div>
 		<div>
 			<form id="liver_query_form">
 				<s:message code="liver.name" text="姓名"/>
-				: <input class="easyui-textbox" style="width: 120px"
+				: <input class="easyui-textbox" style="width: 100px"
 					name="name_like_string">
-				<s:message code="liver.stageName" text="艺名"/>
-				: <input class="easyui-textbox" style="width: 120px"
-					name="stageName_like_string">
+				<s:message code="liver.liveName"/>
+				: <input class="easyui-textbox" style="width: 100px"
+					name="liveName_like_string">
+				<s:message code="liver.broker"/>:
+				<input class="easyui-combotree" name="broker.id_in_String" style="width: 160px"
+					data-options="
+						required:true,
+						url:'${ctx }/user/memberTree',				
+	                    multiple:true,
+						loadFilter:userOrgTreeLoadFilter">
+				<s:message code="liver.platform"/>
+				: <input class="easyui-textbox" style="width: 100px"
+					name="platform_like_string">
+				<s:message code="liver.entryStatus"/>:
+				<input class="easyui-combobox" name="entryStatus_in_String"
+					style="width: 80px;"
+					data-options="
+	                    url:'${ctx }/dict/get?pvalue=liver.entryStatus',
+	                    method:'get',
+	                    valueField:'value',
+	                    textField:'name',
+	                    panelHeight:'auto',				
+	                    multiple:true,
+	                    editable:false
+                    ">
+			    <s:message code="liver.liveStatus"/>:
+				<input class="easyui-combobox" name="liveStatus_in_String"
+				style="width: 80px;"
+				data-options="
+                    url:'${ctx }/dict/get?pvalue=liver.liveStatus',
+                    method:'get',
+                    valueField:'value',
+                    textField:'name',
+                    panelHeight:'auto',				
+	                    multiple:true,
+                    editable:false
+                   ">
 				<a
 					href="javascript:$.ad.gridQuery('liver_query_form','liver_grid')"
 					class="easyui-linkbutton" iconCls="icon-search"><s:message
@@ -38,62 +73,84 @@
 		</div>
 	</div>
 
-	<table class="easyui-datagrid" id="liver_grid" style="width: 720px;"
+	<table class="easyui-datagrid" id="liver_grid" 
 		data-options="rownumbers:true,singleSelect:false,pagination:true,multiSort:true,selectOnCheck:true,
-				url:'${ctx }/liver/query',method:'post',toolbar:'#liver_tb'">
+				url:'${ctx }/liver/query',method:'post',toolbar:'#liver_tb',loadFilter:liverDataProcess">
 		<thead>
 			<tr>
 				<th data-options="field:'ck',checkbox:true"></th>
 				<th data-options="field:'name',width:100"><s:message
-						code="liver.name"  text="姓名"/></th>
-				<th data-options="field:'stageName',width:100"><s:message
-						code="liver.stageName"  text="姓名"/></th>
+						code="liver.name"/></th>
 				<th
-					data-options="field:'phone',width:100"><s:message
-						code="liver.phone"  text="联系电话"/></th>
+					data-options="field:'broker.id',width:100,sortable:'true',formatter:brokerFormatter"><s:message
+						code="liver.broker"/></th>
 				<th
-					data-options="field:'broker.name',width:100,sortable:'true'"><s:message
-						code="liver.broker"  text="经纪人"/></th>
+					data-options="field:'platform',width:100,sortable:'true'"><s:message
+						code="liver.platform"/></th>
 				<th
-					data-options="field:'entryStatus',width:100,align:'center',sortable:'true',formatter:liverStatusFormatter"><s:message
-						code="liver.entryStatus"   text="入职状态"/></th>		
+					data-options="field:'roomNo',width:100"><s:message
+						code="liver.roomNo"/></th>
 				<th
-					data-options="field:'entryDate',width:100"><s:message
-						code="liver.entryDate"  text="入职时间"/></th>		
+					data-options="field:'liveName',width:100"><s:message
+						code="liver.liveName"/></th>
 				<th
-					data-options="field:'leaveDate',width:100"><s:message
-						code="liver.leaveDate"  text="离职时间"/></th>
+					data-options="field:'entryStatus',width:100,align:'center',sortable:'true',formatter:entryStatusFormatter"><s:message
+						code="liver.entryStatus"/></th>	
+				<th
+					data-options="field:'entryDate',width:100,align:'center',sortable:'true'"><s:message
+						code="liver.entryDate"/></th>		
 				<th
 					data-options="field:'signStatus',width:100,align:'center',sortable:'true',formatter:signStatusFormatter"><s:message
-						code="liver.signStatus"   text="签约状态"/></th>		
+						code="liver.signStatus"/></th>
 				<th
-					data-options="field:'signDate',width:100"><s:message
-						code="liver.signDate"  text="签约时间"/></th>		
+					data-options="field:'liveStatus',width:100,align:'center',sortable:'true',formatter:liveStatusFormatter"><s:message
+						code="liver.liveStatus"/></th>
 				<th
-					data-options="field:'breakDate',width:100"><s:message
-						code="liver.breakDate"  text="解约时间"/></th>
+					data-options="field:'phone',width:100"><s:message
+						code="liver.phone"/></th>
 			</tr>
 		</thead>
 	</table>
 	<script type="text/javascript">
 	
-		var liverStatus;
-		function liverStatusFormatter(value,row,index){
-			if(!liverStatus){
+		function liverDataProcess(data){
+			if(data && data.rows){
+				var rows = data.rows;
+				for(var i in rows){
+					
+					//经纪人处理
+					if(rows[i].broker){
+						if(rows[i].broker.$ref){
+							rows[i].broker = eval(rows[i].broker.$ref.replace('$',"data"));
+						}
+					}
+				}
+			}
+			return data;
+		}
+	
+	
+		function brokerFormatter(value,row,index){
+			return row.broker ? row.broker.name : '';
+		}
+	
+		var entryStatus;
+		function entryStatusFormatter(value,row,index){
+			if(!entryStatus){
 				$.ajax({ url: "${ctx }/dict/get?pvalue=liver.entryStatus",async:false, success: function(data){
-			        liverStatus = data;
+					entryStatus = data;
 			      },dataType:'json'});
 			}
 			
-			for(var i in liverStatus){
-				if(liverStatus[i].value == value){
-					return liverStatus[i].name;
+			for(var i in entryStatus){
+				if(entryStatus[i].value == value){
+					return entryStatus[i].name;
 				}
 			}
 		}
 		
 		var liverSignStatus;
-		function liverStatusFormatter(value,row,index){
+		function signStatusFormatter(value,row,index){
 			if(!liverSignStatus){
 				$.ajax({ url: "${ctx }/dict/get?pvalue=liver.signStatus",async:false, success: function(data){
 					liverSignStatus = data;
@@ -107,83 +164,207 @@
 			}
 		}
 		
+		var liveStatus;
+		function liveStatusFormatter(value,row,index){
+			if(!liveStatus){
+				$.ajax({ url: "${ctx }/dict/get?pvalue=liver.liveStatus",async:false, success: function(data){
+					liveStatus = data;
+			      },dataType:'json'});
+			}
+			
+			for(var i in liveStatus){
+				if(liveStatus[i].value == value){
+					return liveStatus[i].name;
+				}
+			}
+		}
+		
 		function liverUpdate(){
 			if(!$("#liver_w").window("options").closed){
-
-				$("#liverRoleComb").combobox('reload');
 				var selRows = $("#liver_grid").datagrid("getSelections");
-				var roleIds = [];
-				var roles = selRows[0].roles;
-				if(roles && roles.length > 0){
-					for(var i in roles){
-						roleIds.push(roles[i].id);
-					}
-				}
-				$("#liverRoleComb").combobox('setValues', roleIds);
+				$("#brokerTreeInput").combotree('setValue', selRows[0].broker.id);
 			}
+		}
+
+		function userOrgTreeLoadFilter(data){
+			return org_user_tree.orgDataConvertToEasyTreeData(data);
 		}
 	</script>
 	
 	<div id="liver_w" class="easyui-window" title='<s:message code="liver.add" />'
 		data-options="modal:true,closed:true,minimizable:false,maximizable:false,collapsible:false"
-		style="width: 400px; height: 400px; padding: 10px;">
+		style="width: 860px; height: 520px;">
 		<div class="content">
 				<form id="liver_add" method="post" action="${ctx }/liver/add">
-					<div style="margin-bottom: 20px">
-						<input class="easyui-textbox" name="name" style="width: 100%"
-							data-options="label:'<s:message code="liver.name"/>:',required:true,validType:'length[1,30]'">
-					</div>
-					<div style="margin-bottom: 20px">
-						<input class="easyui-textbox" name="livername" style="width: 100%"
-							data-options="label:'<s:message code="liver.livername"/>:',required:true,
-							validType:{length:[1,30],myRemote:['${ctx }/liver/unameCheck','livername','#oldlivername']},
-							invalidMessage:I18N.liver_uname_exits">
-						<input type="hidden" name="oldlivername" id="oldlivername" />
-					</div>
-					<div style="margin-bottom: 20px">
-						<input class="easyui-textbox" name="password" type="password"  id="pwd"
-							style="width: 100%"
-							data-options="label:'<s:message code="liver.pwd"/>:',required:true,validType:'length[6,32]'">
-					</div>
-					<div style="margin-bottom: 20px">
-						<input class="easyui-combobox" name="type"
-						style="width: 100%;"
-						data-options="
-		                    url:'${ctx }/dict/get?pvalue=liver.type',
-		                    method:'get',
-		                    valueField:'value',
-		                    textField:'name',
-		                    panelHeight:'auto',
-		                    required:true,
-		                    label:'<s:message code="liver.type"/>:'
-	                    ">
-                    </div>
-					<div style="margin-bottom: 20px">
-						<input class="easyui-combobox" name="status"
-						style="width: 100%;"
-						data-options="
-		                    url:'${ctx }/dict/get?pvalue=liver.status',
-		                    method:'get',
-		                    valueField:'value',
-		                    textField:'name',
-		                    panelHeight:'auto',
-		                    required:true,
-		                    label:'<s:message code="liver.status"/>:'
-	                    ">
-                    </div>
-                    <div style="margin-bottom: 20px">
-						<input class="easyui-combobox" name="roleIds"  id="liverRoleComb"
-						style="width: 100%;"
-						data-options="
-		                    url:'${ctx }/liver/roles',
-		                    method:'get',
-		                    valueField:'id',
-		                    textField:'name',
-		                    panelHeight:'auto',
-		                    label:'<s:message code="role"/>:',
-	                    	multiple:true
-	                    ">
-                    </div>
+				<table>
+					<tr>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="name" style="width: 100%"
+									data-options="label:'<s:message code="liver.name"/>:',required:true,validType:'length[1,30]'">
+							</div>
+						</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="idCardNo" style="width: 100%"
+									data-options="label:'<s:message code="liver.idCardNo"/>:',validType:'length[0,30]'">
+							</div>
+                    	</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input id="brokerTreeInput" class="easyui-combotree" name="broker.id" style="width: 100%"
+									data-options="label:'<s:message code="liver.broker"/>:',
+										required:true,
+										url:'${ctx }/user/memberTree',
+										loadFilter:userOrgTreeLoadFilter">
+							</div>
+						</td>
+                    </tr>
+					<tr>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="platform" style="width: 100%"
+									data-options="label:'<s:message code="liver.platform"/>:',validType:'length[0,40]'">
+							</div>
+                    	</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="roomNo" style="width: 100%"
+									data-options="label:'<s:message code="liver.roomNo"/>:',validType:'length[0,20]'">
+							</div>
+						</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="liveName" style="width: 100%"
+									data-options="label:'<s:message code="liver.liveName"/>:',validType:'length[0,60]'">
+							</div>
+						</td>
+                    </tr>
+					<tr>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-combobox" name="entryStatus"
+								style="width: 100%;"
+								data-options="
+				                    url:'${ctx }/dict/get?pvalue=liver.entryStatus',
+				                    method:'get',
+				                    valueField:'value',
+				                    textField:'name',
+				                    panelHeight:'auto',
+				                    required:true,
+				                    editable:false,
+				                    label:'<s:message code="liver.entryStatus"/>:'
+			                    ">
+		                    </div>
+						</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-datebox" name="entryDate" style="width: 100%"
+									data-options="label:'<s:message code="liver.entryDate"/>:'">
+							</div>
+						</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-datebox" name="leaveDate" style="width: 100%"
+									data-options="label:'<s:message code="liver.leaveDate"/>:'">
+							</div>
+						</td>
+                    </tr>
+					<tr>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-combobox" name="signStatus"
+								style="width: 100%;"
+								data-options="
+				                    url:'${ctx }/dict/get?pvalue=liver.signStatus',
+				                    method:'get',
+				                    valueField:'value',
+				                    textField:'name',
+				                    panelHeight:'auto',
+				                    required:true,
+				                    editable:false,
+				                    label:'<s:message code="liver.signStatus"/>:'
+			                    ">
+		                    </div>
+						</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-combobox" name="liveStatus"
+								style="width: 100%;"
+								data-options="
+				                    url:'${ctx }/dict/get?pvalue=liver.liveStatus',
+				                    method:'get',
+				                    valueField:'value',
+				                    textField:'name',
+				                    panelHeight:'auto',
+				                    required:true,
+				                    editable:false,
+				                    label:'<s:message code="liver.liveStatus"/>:'
+			                    ">
+		                    </div>
+						</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-datebox" name="leaveDate" style="width: 100%"
+									data-options="label:'<s:message code="liver.leaveDate"/>:'">
+							</div>
+						</td>
+                    </tr>
+                    <tr>
+                    	<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-combobox" name="sex"
+								style="width: 100%;"
+								data-options="
+				                    url:'${ctx }/dict/get?pvalue=sex',
+				                    method:'get',
+				                    valueField:'value',
+				                    textField:'name',
+				                    panelHeight:'auto',
+				                    required:true,
+				                    editable:false,
+				                    label:'<s:message code="user.sex"/>:'
+			                    ">
+		                    </div>
+                    	</td>
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-datebox" name="birthday" style="width: 100%"
+									data-options="label:'<s:message code="liver.birthday"/>:'">
+							</div>
+						</td>  
+						<td>
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="phone" style="width: 100%"
+									data-options="label:'<s:message code="liver.phone"/>:',validType:'length[0,30]'">
+							</div>
+						</td>                   
+                    </tr>
+                    <tr>
+                    	<td colspan="6">
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="nativePlace" style="width: 100%"
+									data-options="label:'<s:message code="liver.nativePlace"/>:',validType:'length[0,100]'">
+							</div>
+                    	</td>   
+                    </tr>
+                    <tr>
+                    	<td colspan="6">
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="speciality" style="width: 100%;height:60px"
+									data-options="label:'<s:message code="liver.speciality"/>:',multiline:true,validType:'length[0,200]'">
+							</div>
+                    	</td>   
+                    </tr>
+                    <tr>
+                    	<td colspan="6">
+							<div style="margin-bottom: 10px">
+								<input class="easyui-textbox" name="remark" style="width: 100%;height:60px"
+									data-options="label:'<s:message code="liver.remark"/>:',multiline:true,validType:'length[0,200]'">
+							</div>
+                    	</td>   
+                    </tr>
+                </table>
                     <input type="hidden" name="id" />
                     <input type="hidden" name="version" />
 				</form>
