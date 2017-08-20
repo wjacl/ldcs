@@ -6,7 +6,6 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ include file="/WEB-INF/jsp/frame/comm_css_js.jsp"%>
-	<script type="text/javascript" src="${ctx }/js/app/system/org_user_tree.js"></script>
 </head>
 <body>
 	<%@ include file="/WEB-INF/jsp/frame/header.jsp"%>
@@ -160,7 +159,7 @@
 					data.splice(i,1);
 				}
 			} 
-			return org_user_tree.orgDataConvertToEasyTreeData(data);
+			return $.ad.standardIdPidNameArrayToEasyUITree(data);
 		}
 		
 		function brokerTreeBeforeSelect(node){

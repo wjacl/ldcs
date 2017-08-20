@@ -325,34 +325,63 @@ $.ad = {
 	/**
 	 * 将有父子关系的数据数组，转为easyui-tree的树结构<br>
 	 * @param data []  待转的数据数组<br>
-	 * @param rootIds [] 父id的值在这个rootIds[]数组中的作为根节点<br>
 	 * @param id String 数据的id属性名<br>
 	 * @param pid String 数据的父id属性名<br>
 	 * @param name String 数据的名称属性名<br>
 	 * @returns {Array}
 	 */
-	toEasyUiTree : function (data,rootIds,id,pid,name){
-		var root = [];
-		for(var i in data){
-			data[i].id = data[i][id];
-			data[i].text = data[i][name];
-			
-			if(!data[i][pid] || $.inArray(data[i][pid], rootIds) != -1){
-				root.push(data[i]);
+	toEasyUiTree : function (rows,id,pid,name){
+		function exists(rows, pid){
+			for(var i=0; i<rows.length; i++){
+				if (rows[i].id == pid) return true;
 			}
-			else{
-				for(var j in data){
-					if(data[i][pid] == data[j][id]){
-						if(!data[j].children){
-							data[j].children = [];
-						}
-						data[j].children.push(data[i]);
-						break;
+			return false;
+		}
+		
+		var nodes = [];
+		// get the top level nodes
+		for(var i=0; i<rows.length; i++){
+			var row = rows[i];
+			row.id = row[id];
+			row.text = row[name];
+			if (!exists(rows, row[pid])){
+				nodes.push(row);
+			}
+		}
+		
+		var toDo = [];
+		for(var i=0; i<nodes.length; i++){
+			toDo.push(nodes[i]);
+		}
+		while(toDo.length){
+			var node = toDo.shift();	// the parent node
+			// get the children nodes
+			for(var i=0; i<rows.length; i++){
+				var row = rows[i];
+				if (row[pid] == node.id){
+					if (node.children){
+						node.children.push(row);
+					} else {
+						node.children = [row];
 					}
+					toDo.push(row);
 				}
 			}
 		}
-		return root;
+		return nodes;
+	},
+	
+	/**
+	 * 新建的命名更确切的标准数据转easyUiTree
+	 * @param data
+	 * @returns
+	 */
+	standardIdPidNameArrayToEasyUITree : function(data){
+		if(!data){
+			return null;
+		}
+		
+		return $.ad.toEasyUiTree(data,'id','pid','name');
 	},
 	
 	easyTreeDefaultLoadFilter : function (data){
@@ -360,7 +389,7 @@ $.ad = {
 			return null;
 		}
 		
-		return $.ad.toEasyUiTree(data,['0'],'id','pid','name');
+		return $.ad.toEasyUiTree(data,'id','pid','name');
 		
 	},
 	
