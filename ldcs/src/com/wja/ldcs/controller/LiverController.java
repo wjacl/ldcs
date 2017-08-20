@@ -1,5 +1,6 @@
 package com.wja.ldcs.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.wja.base.common.OpResult;
 import com.wja.base.system.service.UserService;
 import com.wja.base.util.Page;
+import com.wja.base.util.Sort;
 import com.wja.ldcs.entity.Liver;
 import com.wja.ldcs.service.LiverService;
 
@@ -47,6 +49,12 @@ public class LiverController {
     @ResponseBody
     public Page<Liver> pageQuery(@RequestParam Map<String, Object> params, Page<Liver> page) {
 	return this.liverService.pageQuery(params, page);
+    }
+
+    @RequestMapping("list")
+    @ResponseBody
+    public List<Liver> listQuery(@RequestParam Map<String, Object> params, Sort sort) {
+	return this.liverService.query(params, sort);
     }
 
     @RequestMapping("delete")
