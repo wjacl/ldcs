@@ -20,12 +20,9 @@ var org_user_tree = {
 		// get the top level nodes
 		for(var i=0; i<rows.length; i++){
 			var row = rows[i];
+			row.text = row.name;
 			if (!exists(rows, row.pid)){
-				nodes.push({
-					id:row.id,
-					text:row.name,
-					iconCls:row.iconCls?row.iconCls:""
-				});
+				nodes.push(row);
 			}
 		}
 		
@@ -39,14 +36,12 @@ var org_user_tree = {
 			for(var i=0; i<rows.length; i++){
 				var row = rows[i];
 				if (row.pid == node.id){
-					var child = {id:row.id,text:row.name,
-							iconCls:row.iconCls?row.iconCls:""};
 					if (node.children){
-						node.children.push(child);
+						node.children.push(row);
 					} else {
-						node.children = [child];
+						node.children = [row];
 					}
-					toDo.push(child);
+					toDo.push(row);
 				}
 			}
 		}

@@ -134,49 +134,16 @@
 			return row.broker ? row.broker.name : '';
 		}
 	
-		var entryStatus;
 		function entryStatusFormatter(value,row,index){
-			if(!entryStatus){
-				$.ajax({ url: "${ctx }/dict/get?pvalue=liver.entryStatus",async:false, success: function(data){
-					entryStatus = data;
-			      },dataType:'json'});
-			}
-			
-			for(var i in entryStatus){
-				if(entryStatus[i].value == value){
-					return entryStatus[i].name;
-				}
-			}
+			return $.ad.getDictName("liver.entryStatus",value);
 		}
 		
-		var liverSignStatus;
 		function signStatusFormatter(value,row,index){
-			if(!liverSignStatus){
-				$.ajax({ url: "${ctx }/dict/get?pvalue=liver.signStatus",async:false, success: function(data){
-					liverSignStatus = data;
-			      },dataType:'json'});
-			}
-			
-			for(var i in liverSignStatus){
-				if(liverSignStatus[i].value == value){
-					return liverSignStatus[i].name;
-				}
-			}
+			return $.ad.getDictName("liver.signStatus",value);
 		}
-		
-		var liveStatus;
+
 		function liveStatusFormatter(value,row,index){
-			if(!liveStatus){
-				$.ajax({ url: "${ctx }/dict/get?pvalue=liver.liveStatus",async:false, success: function(data){
-					liveStatus = data;
-			      },dataType:'json'});
-			}
-			
-			for(var i in liveStatus){
-				if(liveStatus[i].value == value){
-					return liveStatus[i].name;
-				}
-			}
+			return $.ad.getDictName("liver.liveStatus",value);
 		}
 		
 		function liverUpdate(){
@@ -187,7 +154,17 @@
 		}
 
 		function userOrgTreeLoadFilter(data){
+			//去掉非经纪人
+			for(var i = data.length - 1; i >=0; i--){
+				if(data[i].userType != undefined && data[i].userType != "B"){
+					data.splice(i,1);
+				}
+			} 
 			return org_user_tree.orgDataConvertToEasyTreeData(data);
+		}
+		
+		function brokerTreeBeforeSelect(node){
+			return node.userType != undefined && node.userType == "B";
 		}
 	</script>
 	
@@ -216,6 +193,7 @@
 									data-options="label:'<s:message code="liver.broker"/>:',
 										required:true,
 										url:'${ctx }/user/memberTree',
+										onBeforeSelect:brokerTreeBeforeSelect,
 										loadFilter:userOrgTreeLoadFilter">
 							</div>
 						</td>
