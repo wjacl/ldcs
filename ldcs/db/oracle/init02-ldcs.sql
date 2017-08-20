@@ -40,3 +40,18 @@ INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liver-update');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liver-delete');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liver-get');
 
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData','主播数据管理','/liveData/manage','ldcs','1',1,1111);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-query','查询','/liveData/query','ldcs-liveData','0',1,1112);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-add','新增','/liveData/add','ldcs-liveData','0',1,1113);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-update','修改','/liveData/update','ldcs-liveData','0',1,1114);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-delete','删除','/liveData/delete','ldcs-liveData','0',1,1115);
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-query');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-add');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-update');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-delete');
