@@ -57,6 +57,12 @@ public class LiverController {
 	return this.liverService.query(params, sort);
     }
 
+    @RequestMapping("tree")
+    @ResponseBody
+    public List<Object> treeQuery(@RequestParam Map<String, Object> params, Sort sort) {
+	return this.liverService.treeQuery(params, sort);
+    }
+
     @RequestMapping("delete")
     @ResponseBody
     public OpResult delete(String[] id) {
