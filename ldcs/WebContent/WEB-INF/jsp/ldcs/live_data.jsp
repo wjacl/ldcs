@@ -36,6 +36,13 @@
 						url:'${ctx }/user/memberTree',				
 	                    multiple:true,
 						loadFilter:userOrgTreeLoadFilter">
+				<s:message code="liver"/>:
+				<input class="easyui-combotree" name="broker.id_in_String" style="width: 160px"
+					data-options="
+						required:true,
+						url:'${ctx }/liver/tree',				
+	                    multiple:true,
+						loadFilter:liverOrgTreeLoadFilter">
 				<s:message code="liver.platform"/>
 				: <input class="easyui-textbox" style="width: 100px"
 					name="platform_like_string">
@@ -57,9 +64,9 @@
 					editor:{
 						type:'combotree',
 						options:{
-							url:'${ctx }/user/memberTree',
-							onBeforeSelect:brokerTreeBeforeSelect,
-							loadFilter:userOrgTreeLoadFilter,
+							url:'${ctx }/liver/tree',
+							onBeforeSelect:liverTreeBeforeSelect,
+							loadFilter:liverOrgTreeLoadFilter,
 							required:true
 						}
 					}"><s:message
@@ -72,7 +79,8 @@
 							url:'${ctx }/user/memberTree',
 							onBeforeSelect:brokerTreeBeforeSelect,
 							loadFilter:userOrgTreeLoadFilter,
-							required:true
+							required:true,
+							width:120
 						}
 					}"><s:message
 						code="liver.broker"/></th>
@@ -166,6 +174,28 @@
 			}
 		}
 
+		function liverOrgTreeLoadFilter(data){
+			var nodes = $.ad.standardIdPidNameArrayToEasyUITree(data);
+			removeHasNoLiverNodes(nodes);
+			return nodes;
+		}
+		
+		function removeHasNoLiverNodes(data){
+			for(var i = data.length - 1; i >= 0; i--){
+				if(data[i].type != "liver" && data[i].children != undefined){
+					removeHasNoLiverNodes(data[i].children);
+				}
+				
+				if(data[i].type != "liver" && (data[i].children == undefined || data[i].children.length == 0)){
+					data.splice(i,1);
+				}
+			}
+		}
+		
+		function liverTreeBeforeSelect(node){
+			return node.type == "liver";
+		}
+		
 		function userOrgTreeLoadFilter(data){
 			//去掉非经纪人
 			for(var i = data.length - 1; i >=0; i--){
@@ -206,8 +236,8 @@
 									data-options="label:'<s:message code="liveData.broker"/>:',
 										required:true,
 										url:'${ctx }/user/memberTree',
-										onBeforeSelect:brokerTreeBeforeSelect,
-										loadFilter:userOrgTreeLoadFilter">
+										onBeforeSelect:liverTreeBeforeSelect,
+										loadFilter:liverOrgTreeLoadFilter">
 							</div>
 						</td>
                     </tr>
