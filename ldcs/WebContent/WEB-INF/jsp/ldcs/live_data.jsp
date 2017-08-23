@@ -30,14 +30,14 @@
 				: <input class="easyui-textbox" style="width: 100px"
 					name="liveName_like_string"> --%>
 				<s:message code="liver.broker"/>:
-				<input class="easyui-combotree" name="broker.id_in_String" style="width: 160px"
+				<input class="easyui-combotree" name="brokerId_in_String" style="width: 160px"
 					data-options="
 						required:true,
 						url:'${ctx }/user/memberTree',				
 	                    multiple:true,
 						loadFilter:userOrgTreeLoadFilter">
 				<s:message code="liver"/>:
-				<input class="easyui-combotree" name="broker.id_in_String" style="width: 160px"
+				<input class="easyui-combotree" name="liverId_in_String" style="width: 160px"
 					data-options="
 						required:true,
 						url:'${ctx }/liver/tree',				
@@ -60,7 +60,7 @@
 		<thead>
 			<tr>
 				<th data-options="field:'ck',checkbox:true"></th>
-				<th data-options="field:'liver',width:100,sortable:'true',formatter:liverFormatter,
+				<th data-options="field:'liverId',width:100,sortable:'true',formatter:liverFormatter,
 					editor:{
 						type:'combotree',
 						options:{
@@ -72,7 +72,7 @@
 					}"><s:message
 						code="liveData.liver"/></th>
 				<th
-					data-options="field:'broker',width:100,sortable:'true',formatter:brokerFormatter,
+					data-options="field:'brokerId',width:100,sortable:'true',formatter:brokerFormatter,
 					editor:{
 						type:'combotree',
 						options:{
@@ -130,33 +130,15 @@
 	<script type="text/javascript">
 	
 		function liveDataDataProcess(data){
-			if(data && data.rows){
-				var rows = data.rows;
-				for(var i in rows){
-					//主播处理
-					if(rows[i].liver.$ref){
-						rows[i].liver = eval(rows[i].liver.$ref.replace('$',"data"));
-					}
-					//经纪人处理
-					if(rows[i].broker){
-						if(rows[i].broker.$ref){
-							rows[i].broker = eval(rows[i].broker.$ref.replace('$',"data"));
-						}
-					}
-				}
-			}
 			return data;
 		}
 		
 		function liverFormatter(value,row,index){
-			if(row.liver){
-				return row.liver.name;
-			}
-			return "";
+			return row.liverName? row.liverName : '';;
 		}
 	
 		function brokerFormatter(value,row,index){
-			return row.broker ? row.broker.name : '';
+			return row.brokerName ? row.brokerName : '';
 		}
 		
 
