@@ -67,6 +67,7 @@
 							url:'${ctx }/liver/tree',
 							onBeforeSelect:liverTreeBeforeSelect,
 							loadFilter:liverOrgTreeLoadFilter,
+							onSelect:liverTreeOnSelect,
 							required:true
 						}
 					}"><s:message
@@ -146,7 +147,8 @@
 			url:'${ctx }/liveData/query',
 			saveUrl: '${ctx }/liveData/add',
 			updateUrl: '${ctx }/liveData/update',
-			destroyUrl: '${ctx }/liveData/delete'
+			destroyUrl: '${ctx }/liveData/delete',
+			onBeforeEdit:liveDataGridBeforeEdit
 		});
 				
 		function liveDataUpdate(){
@@ -157,6 +159,13 @@
 		}
 
 		function liverOrgTreeLoadFilter(data){
+			for(var i in data){
+				if(data[i].type == "liver" && data[i].origin.broker){
+					if(data[i].origin.broker.$ref)
+						data[i].origin.broker = eval(data[i].origin.broker.$ref.replace('$',"data"));
+				}
+			}
+			
 			var nodes = $.ad.standardIdPidNameArrayToEasyUITree(data);
 			removeHasNoLiverNodes(nodes);
 			return nodes;
@@ -174,9 +183,52 @@
 			}
 		}
 		
-		function liverTreeBeforeSelect(node){
-			return node.type == "liver";
+		var currLiveDataGridEditRowIndex;
+		
+		function liveDataGridBeforeEdit(index){
+			currLiveDataGridEditRowIndex = index;
 		}
+		
+		
+		function liverTreeBeforeSelect(node){
+			if(node.type == "liver"){
+				var row = $('#liveData_grid').datagrid("getSelected");
+				row.liverName = node.text;
+				row.brokerId = node.origin.broker.id;
+				row.brokerName = node.origin.broker.name;
+				row.platform = node.origin.platform;
+				row.roomNo = node.origin.roomNo;
+				row.liveName = node.origin.liveName;
+				
+				currLiveDataGridEditRowIndex
+				var ed = $('#dg').datagrid('getEditor', {index:1,field:'birthday'});
+				$(ed.target).datebox('setValue', '5/4/2012');
+				return true;
+			}
+			
+			return false;
+		}
+		
+		function liverTreeOnSelect(node){
+			var row = $('#liveData_grid').datagrid("getSelected");
+			row.liverName = node.text;
+			var editors = $('#liveData_grid').datagrid("getEditor",currLiveDataGridEditRowIndex);
+			for(var i in editors){
+				if(editors[i].field == "brokerId"){
+					$(editors[i].target).combotree("setValue",node.origin.broker.id);
+				}
+				else if(editors[i].field == "platform"){
+					$(editors[i].target).text("setValue",node.origin.platform);
+				}
+				else if(editors[i].field == "roomNo"){
+					$(editors[i].target).text("setValue",node.origin.roomNo);
+				}
+				else if(editors[i].field == "liveName"){
+					$(editors[i].target).text("setValue",node.origin.liveName);
+				}
+			}
+		}
+		
 		
 		function userOrgTreeLoadFilter(data){
 			//去掉非经纪人
