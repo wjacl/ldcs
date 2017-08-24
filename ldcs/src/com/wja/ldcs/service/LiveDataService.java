@@ -12,12 +12,17 @@ import com.wja.ldcs.dao.LiveDataDao;
 import com.wja.ldcs.entity.LiveData;
 
 @Service
-public class LiveDataService extends CommService<LiveData> {
+public class LiveDataService extends CommService<LiveData>
+{
     @Autowired
     private LiveDataDao liveDataDao;
-
-    public Page<LiveData> pageQuery(Map<String, Object> params, Page<LiveData> page) {
-	return page
-		.setPageData(this.liveDataDao.findAll(new CommSpecification<LiveData>(params), page.getPageRequest()));
+    
+    @Autowired
+    private PrivilegeControlService privilegeControlService;
+    
+    public Page<LiveData> pageQuery(Map<String, Object> params, Page<LiveData> page)
+    {
+        return page
+            .setPageData(this.liveDataDao.findAll(new CommSpecification<LiveData>(params), page.getPageRequest()));
     }
 }

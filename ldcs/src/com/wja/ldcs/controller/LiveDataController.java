@@ -10,23 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.wja.base.common.OpResult;
-import com.wja.base.system.service.UserService;
 import com.wja.base.util.BeanUtil;
 import com.wja.base.util.Page;
 import com.wja.ldcs.entity.LiveData;
 import com.wja.ldcs.service.LiveDataService;
-import com.wja.ldcs.service.LiverService;
 
 @Controller
 @RequestMapping("/liveData")
 public class LiveDataController
 {
-    @Autowired
-    private LiverService liverService;
-    
-    @Autowired
-    private UserService userService;
-    
     @Autowired
     private LiveDataService liveDataService;
     
