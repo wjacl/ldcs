@@ -13,6 +13,18 @@
 
   <function>
     <description>
+      获取当前日期字符串，格式：yyyy-MM-dd
+    </description>
+    <name>today</name>
+    <function-class>com.wja.base.util.DateUtil</function-class>
+    <function-signature>java.lang.String getNowDateStr()</function-signature>
+    <example>
+      ${appfn:today()}
+    </example>
+  </function>
+  
+  <function>
+    <description>
       获取当日的工作开始时间字符串
     </description>
     <name>todayWorkStartTime</name>

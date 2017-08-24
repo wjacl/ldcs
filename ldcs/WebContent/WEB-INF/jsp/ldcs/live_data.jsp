@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="appfn" uri="http://wja.com/jsp/app/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -35,17 +36,25 @@
 						required:true,
 						url:'${ctx }/user/memberTree',				
 	                    multiple:true,
-						loadFilter:userOrgTreeLoadFilter">
+						loadFilter:userOrgTreeLoadFilter,
+						panelWidth:180">
 				<s:message code="liver"/>:
 				<input class="easyui-combotree" name="liverId_in_String" style="width: 160px"
 					data-options="
 						required:true,
 						url:'${ctx }/liver/tree',				
 	                    multiple:true,
-						loadFilter:liverOrgTreeLoadFilter">
+						loadFilter:liverOrgTreeLoadFilter,
+						panelWidth:180">
 				<s:message code="liver.platform"/>
 				: <input class="easyui-textbox" style="width: 100px"
 					name="platform_like_string">
+				<s:message code="liveData.date"/>
+				: <input class="easyui-datebox" style="width: 100px"
+					name="date_after_date">
+					-
+					<input class="easyui-datebox" style="width: 100px"
+					name="date_before_date">
 				<a
 					href="javascript:$.ad.gridQuery('liveData_query_form','liveData_grid')"
 					class="easyui-linkbutton" iconCls="icon-search"><s:message
@@ -60,7 +69,7 @@
 		<thead>
 			<tr>
 				<th data-options="field:'ck',checkbox:true"></th>
-				<th data-options="field:'liverId',width:100,sortable:'true',formatter:liverFormatter,
+				<th data-options="field:'liverId',width:70,sortable:'true',formatter:liverFormatter,
 					editor:{
 						type:'combotree',
 						options:{
@@ -68,12 +77,13 @@
 							onBeforeSelect:liverTreeBeforeSelect,
 							loadFilter:liverOrgTreeLoadFilter,
 							onSelect:liverTreeOnSelect,
-							required:true
+							required:true,
+							panelWidth:180
 						}
 					}"><s:message
 						code="liveData.liver"/></th>
 				<th
-					data-options="field:'brokerId',width:100,sortable:'true',formatter:brokerFormatter,
+					data-options="field:'brokerId',width:80,sortable:'true',formatter:brokerFormatter,
 					editor:{
 						type:'combotree',
 						options:{
@@ -81,7 +91,7 @@
 							onBeforeSelect:brokerTreeBeforeSelect,
 							loadFilter:userOrgTreeLoadFilter,
 							required:true,
-							width:120
+							panelWidth:180
 						}
 					}"><s:message
 						code="liver.broker"/></th>
@@ -95,10 +105,10 @@
 					data-options="field:'liveName',width:100,editor:'text'"><s:message
 						code="liver.liveName"/></th>
 				<th
-					data-options="field:'date',width:60,align:'center',sortable:'true',editor:'datebox'"><s:message
+					data-options="field:'date',width:90,align:'center',sortable:'true',editor:'datebox'"><s:message
 						code="liveData.date"/></th>	
 				<th
-					data-options="field:'rss',width:60,editor:'numberbox'"><s:message
+					data-options="field:'rss',width:68,editor:'numberbox'"><s:message
 						code="liveData.rss"/></th>
 				<th
 					data-options="field:'rssGrowRate',width:60,editor:{type:'numberbox',
@@ -111,14 +121,14 @@
 					data-options="field:'popularity',width:60,editor:'numberbox'"><s:message
 						code="liveData.popularity"/></th>
 				<th
-					data-options="field:'giftEarning',width:100,editor:{type:'numberbox',
+					data-options="field:'giftEarning',width:80,editor:{type:'numberbox',
 						options:{
 							precision:2,
 							min:0,
 							max:99999999.99}}"><s:message
 						code="liveData.giftEarning"/></th>
 				<th
-					data-options="field:'liveDuration',width:60,editor:'numberbox'"><s:message
+					data-options="field:'liveDuration',width:90,editor:'numberbox'"><s:message
 						code="liveData.liveDuration"/></th>
 				<th
 					data-options="field:'remark',width:140,editor:{type:'textarea',
@@ -128,8 +138,7 @@
 			</tr>
 		</thead>
 	</table>
-	<script type="text/javascript">
-	
+	<script type="text/javascript">	
 		function liveDataDataProcess(data){
 			return data;
 		}
@@ -183,6 +192,8 @@
 			}
 		}
 		
+		var today = '${appfn:today()}';
+		
 		var currLiveDataGridEditRowIndex;
 		
 		function liveDataGridBeforeEdit(index){
@@ -191,40 +202,29 @@
 		
 		
 		function liverTreeBeforeSelect(node){
-			if(node.type == "liver"){
-				var row = $('#liveData_grid').datagrid("getSelected");
-				row.liverName = node.text;
-				row.brokerId = node.origin.broker.id;
-				row.brokerName = node.origin.broker.name;
-				row.platform = node.origin.platform;
-				row.roomNo = node.origin.roomNo;
-				row.liveName = node.origin.liveName;
-				
-				currLiveDataGridEditRowIndex
-				var ed = $('#dg').datagrid('getEditor', {index:1,field:'birthday'});
-				$(ed.target).datebox('setValue', '5/4/2012');
-				return true;
-			}
-			
-			return false;
+			return node.type == "liver";
 		}
 		
 		function liverTreeOnSelect(node){
-			var row = $('#liveData_grid').datagrid("getSelected");
+			var row = $('#liveData_grid').edatagrid("getSelected");
 			row.liverName = node.text;
-			var editors = $('#liveData_grid').datagrid("getEditor",currLiveDataGridEditRowIndex);
+			var editors = $('#liveData_grid').edatagrid("getEditors",currLiveDataGridEditRowIndex);
 			for(var i in editors){
 				if(editors[i].field == "brokerId"){
 					$(editors[i].target).combotree("setValue",node.origin.broker.id);
+					row.brokerName = node.origin.broker.name;
 				}
 				else if(editors[i].field == "platform"){
-					$(editors[i].target).text("setValue",node.origin.platform);
+					$(editors[i].target).val(node.origin.platform);
 				}
 				else if(editors[i].field == "roomNo"){
-					$(editors[i].target).text("setValue",node.origin.roomNo);
+					$(editors[i].target).val(node.origin.roomNo);
 				}
 				else if(editors[i].field == "liveName"){
-					$(editors[i].target).text("setValue",node.origin.liveName);
+					$(editors[i].target).val(node.origin.liveName);
+				}
+				else if(editors[i].field == "date"){
+					$(editors[i].target).datebox("setValue",today);
 				}
 			}
 		}
@@ -244,196 +244,6 @@
 			return node.userType != undefined && node.userType == "B";
 		}
 	</script>
-	<%-- 
-	<div id="liveData_w" class="easyui-window" title='<s:message code="liveData.add" />'
-		data-options="modal:true,closed:true,minimizable:false,maximizable:false,collapsible:false"
-		style="width: 860px; height: 520px;">
-		<div class="content">
-				<form id="liveData_add" method="post" action="${ctx }/liveData/add">
-				<table>
-					<tr>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="name" style="width: 100%"
-									data-options="label:'<s:message code="liveData.name"/>:',required:true,validType:'length[1,30]'">
-							</div>
-						</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="idCardNo" style="width: 100%"
-									data-options="label:'<s:message code="liveData.idCardNo"/>:',validType:'length[0,30]'">
-							</div>
-                    	</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input id="brokerTreeInput" class="easyui-combotree" name="broker.id" style="width: 100%"
-									data-options="label:'<s:message code="liveData.broker"/>:',
-										required:true,
-										url:'${ctx }/user/memberTree',
-										onBeforeSelect:liverTreeBeforeSelect,
-										loadFilter:liverOrgTreeLoadFilter">
-							</div>
-						</td>
-                    </tr>
-					<tr>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="platform" style="width: 100%"
-									data-options="label:'<s:message code="liveData.platform"/>:',validType:'length[0,40]'">
-							</div>
-                    	</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="roomNo" style="width: 100%"
-									data-options="label:'<s:message code="liveData.roomNo"/>:',validType:'length[0,20]'">
-							</div>
-						</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="liveName" style="width: 100%"
-									data-options="label:'<s:message code="liveData.liveName"/>:',validType:'length[0,60]'">
-							</div>
-						</td>
-                    </tr>
-					<tr>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-combobox" name="entryStatus"
-								style="width: 100%;"
-								data-options="
-				                    url:'${ctx }/dict/get?pvalue=liveData.entryStatus',
-				                    method:'get',
-				                    valueField:'value',
-				                    textField:'name',
-				                    panelHeight:'auto',
-				                    required:true,
-				                    editable:false,
-				                    label:'<s:message code="liveData.entryStatus"/>:'
-			                    ">
-		                    </div>
-						</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-datebox" name="entryDate" style="width: 100%"
-									data-options="label:'<s:message code="liveData.entryDate"/>:'">
-							</div>
-						</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-datebox" name="leaveDate" style="width: 100%"
-									data-options="label:'<s:message code="liveData.leaveDate"/>:'">
-							</div>
-						</td>
-                    </tr>
-					<tr>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-combobox" name="signStatus"
-								style="width: 100%;"
-								data-options="
-				                    url:'${ctx }/dict/get?pvalue=liveData.signStatus',
-				                    method:'get',
-				                    valueField:'value',
-				                    textField:'name',
-				                    panelHeight:'auto',
-				                    required:true,
-				                    editable:false,
-				                    label:'<s:message code="liveData.signStatus"/>:'
-			                    ">
-		                    </div>
-						</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-combobox" name="liveStatus"
-								style="width: 100%;"
-								data-options="
-				                    url:'${ctx }/dict/get?pvalue=liveData.liveStatus',
-				                    method:'get',
-				                    valueField:'value',
-				                    textField:'name',
-				                    panelHeight:'auto',
-				                    required:true,
-				                    editable:false,
-				                    label:'<s:message code="liveData.liveStatus"/>:'
-			                    ">
-		                    </div>
-						</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-datebox" name="leaveDate" style="width: 100%"
-									data-options="label:'<s:message code="liveData.leaveDate"/>:'">
-							</div>
-						</td>
-                    </tr>
-                    <tr>
-                    	<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-combobox" name="sex"
-								style="width: 100%;"
-								data-options="
-				                    url:'${ctx }/dict/get?pvalue=sex',
-				                    method:'get',
-				                    valueField:'value',
-				                    textField:'name',
-				                    panelHeight:'auto',
-				                    required:true,
-				                    editable:false,
-				                    label:'<s:message code="user.sex"/>:'
-			                    ">
-		                    </div>
-                    	</td>
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-datebox" name="birthday" style="width: 100%"
-									data-options="label:'<s:message code="liveData.birthday"/>:'">
-							</div>
-						</td>  
-						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="phone" style="width: 100%"
-									data-options="label:'<s:message code="liveData.phone"/>:',validType:'length[0,30]'">
-							</div>
-						</td>                   
-                    </tr>
-                    <tr>
-                    	<td colspan="6">
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="nativePlace" style="width: 100%"
-									data-options="label:'<s:message code="liveData.nativePlace"/>:',validType:'length[0,100]'">
-							</div>
-                    	</td>   
-                    </tr>
-                    <tr>
-                    	<td colspan="6">
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="speciality" style="width: 100%;height:60px"
-									data-options="label:'<s:message code="liveData.speciality"/>:',multiline:true,validType:'length[0,200]'">
-							</div>
-                    	</td>   
-                    </tr>
-                    <tr>
-                    	<td colspan="6">
-							<div style="margin-bottom: 10px">
-								<input class="easyui-textbox" name="remark" style="width: 100%;height:60px"
-									data-options="label:'<s:message code="liveData.remark"/>:',multiline:true,validType:'length[0,200]'">
-							</div>
-                    	</td>   
-                    </tr>
-                </table>
-                    <input type="hidden" name="id" />
-                    <input type="hidden" name="version" />
-				</form>
-				<div style="text-align: center; padding: 5px 0">
-					<a href="javascript:void(0)" class="easyui-linkbutton"
-						onclick="$.ad.submitForm('liveData_add','liveData_grid','liveData_w')" style="width: 80px">
-						<s:message code="comm.submit" /></a> 
-					<a href="javascript:void(0)"
-						class="easyui-linkbutton" onclick="$.ad.clearForm('liveData_add')"
-						style="width: 80px"><s:message code="comm.clear" /></a>
-				</div>
-		</div>
-	</div>
-		--%>
 	<%@ include file="/WEB-INF/jsp/frame/footer.jsp"%>
 </body>
 </html>
