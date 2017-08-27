@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,12 +16,18 @@
 	
 	<div id="liver_tb" style="padding: 5px; height: auto">
 		<div style="margin-bottom: 5px">
+			<app:author path="/liver/add">
 			<a href="javascript:$.ad.toAdd('liver_w',I18N.liver,'liver_add','${ctx }/liver/add');" class="easyui-linkbutton"
 				iconCls="icon-add" plain="true"><s:message code='comm.add' /></a> 
+			</app:author>
+			<app:author path="/liver/update"> 
 			<a href="javascript:$.ad.toUpdate('liver_grid','liver_w',I18N.liver,'liver_add','${ctx }/liver/update');liverUpdate()"
-				class="easyui-linkbutton" iconCls="icon-edit" plain="true"><s:message code='comm.update' /></a>
+				class="easyui-linkbutton" iconCls="icon-edit" plain="true"><s:message code='comm.update' /></a>	 
+			</app:author>
+			<app:author path="/liver/delete">
 			<a href="javascript:$.ad.doDelete('liver_grid','${ctx }/liver/delete')" class="easyui-linkbutton" iconCls="icon-remove"
-				plain="true"><s:message code='comm.remove' /></a>
+				plain="true"><s:message code='comm.remove' /></a> 
+			</app:author>
 		</div>
 		<div>
 			<form id="liver_query_form">

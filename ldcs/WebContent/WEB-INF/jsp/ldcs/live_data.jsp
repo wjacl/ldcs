@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="s" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="appfn" uri="http://wja.com/jsp/app/functions"%>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,20 +17,20 @@
 	
 	<div id="liveData_tb" style="padding: 5px; height: auto">
 		<div style="margin-bottom: 5px">
-			<a href="javascript:$('#liveData_grid').edatagrid('addRow')" class="easyui-linkbutton"
-				iconCls="icon-add" plain="true"><s:message code='comm.add' /></a> 
-			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#liveData_grid').edatagrid('destroyRow')"><s:message code='comm.remove' /></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="javascript:$('#liveData_grid').edatagrid('saveRow')"><s:message code='comm.save' /></a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:$('#liveData_grid').edatagrid('cancelRow')"><s:message code='comm.cancel' /></a>
+			<app:author path="/liveData/add">
+				<a href="javascript:$('#liveData_grid').edatagrid('addRow')" class="easyui-linkbutton"
+					iconCls="icon-add" plain="true"><s:message code='comm.add' /></a> 
+			</app:author>
+			<app:author path="/liveData/delete">
+				<a href="#" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="javascript:$('#liveData_grid').edatagrid('destroyRow')"><s:message code='comm.remove' /></a>
+			</app:author>
+			<app:author path="/liveData/add;/liveData/update">
+				<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="javascript:$('#liveData_grid').edatagrid('saveRow')"><s:message code='comm.save' /></a>
+				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:$('#liveData_grid').edatagrid('cancelRow')"><s:message code='comm.cancel' /></a>
+			</app:author>
 		</div>
 		<div>
 			<form id="liveData_query_form">
-				<%-- <s:message code="liver.broker"/>
-				: <input class="easyui-textbox" style="width: 100px"
-					name="name_like_string">
-				<s:message code="liver.liveName"/>
-				: <input class="easyui-textbox" style="width: 100px"
-					name="liveName_like_string"> --%>
 				<s:message code="liver.broker"/>:
 				<input class="easyui-combotree" name="brokerId_in_String" style="width: 160px"
 					data-options="
@@ -64,7 +65,7 @@
 	</div>
 
 	<table id="liveData_grid" 
-		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,selectOnCheck:true,
+		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,selectOnCheck:false,checkOnSelect:false,
 				idField:'id',method:'post',toolbar:'#liveData_tb',loadFilter:liveDataDataProcess">
 		<thead>
 			<tr>
