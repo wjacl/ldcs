@@ -1,6 +1,7 @@
 package com.wja.base.web;
 
 import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -13,6 +14,7 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.servlet.FrameworkServlet;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
+import com.wja.base.common.CommConstants;
 import com.wja.base.system.entity.Param;
 import com.wja.base.system.service.ParamService;
 
@@ -20,123 +22,141 @@ import com.wja.base.system.service.ParamService;
  * 应用上下文获取工具类
  * 
  * @author ok
- *         
+ * 
  */
-public class AppContext implements ServletContextListener
-{
-    
+public class AppContext implements ServletContextListener {
+
     private static WebApplicationContext springContext;
-    
+
     private static ServletContext servletContext;
-    
+
     private static WebApplicationContext springMvcContext;
-    
+
     @Override
-    public void contextDestroyed(ServletContextEvent arg0)
-    {
-        springContext = null;
+    public void contextDestroyed(ServletContextEvent arg0) {
+	springContext = null;
     }
-    
+
     @Override
-    public void contextInitialized(ServletContextEvent event)
-    {
-        servletContext = event.getServletContext();
-        springContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
+    public void contextInitialized(ServletContextEvent event) {
+	servletContext = event.getServletContext();
+	springContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
     }
-    
-    public static WebApplicationContext getWebApplicationContext()
-    {
-        return springContext;
+
+    public static WebApplicationContext getWebApplicationContext() {
+	return springContext;
     }
-    
-    public static ServletContext getServletContext()
-    {
-        return servletContext;
+
+    public static ServletContext getServletContext() {
+	return servletContext;
     }
-    
+
     /**
      * 获取国际化信息
      * 
-     * @param code 国际化代码
+     * @param code
+     *            国际化代码
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static String getMessage(String code)
-    {
-        return getMessage(code, null);
+    public static String getMessage(String code) {
+	return getMessage(code, null);
     }
-    
+
     /**
      * 
      * 获取国际化信息
      * 
-     * @param code 国际化代码
-     * @param args 信息中的替换参数
+     * @param code
+     *            国际化代码
+     * @param args
+     *            信息中的替换参数
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static String getMessage(String code, Object[] args)
-    {
-        HttpServletRequest req = RequestThreadLocal.request.get();
-        Locale locale = (Locale)req.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
-        
-        return getSpringMvcContext().getMessage(code, args, locale == null ? req.getLocale() : locale);
+    public static String getMessage(String code, Object[] args) {
+	HttpServletRequest req = RequestThreadLocal.request.get();
+	Locale locale = (Locale) req.getSession().getAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME);
+
+	return getSpringMvcContext().getMessage(code, args, locale == null ? req.getLocale() : locale);
     }
-    
-    private static WebApplicationContext getSpringMvcContext()
-    {
-        if (springMvcContext == null)
-        {
-            
-            springMvcContext = (WebApplicationContext)servletContext
-                .getAttribute(FrameworkServlet.SERVLET_CONTEXT_PREFIX + "dispatcher");
-        }
-        
-        if (springMvcContext == null)
-        {
-            springMvcContext = springContext;
-        }
-        
-        return springMvcContext;
+
+    private static WebApplicationContext getSpringMvcContext() {
+	if (springMvcContext == null) {
+
+	    springMvcContext = (WebApplicationContext) servletContext
+		    .getAttribute(FrameworkServlet.SERVLET_CONTEXT_PREFIX + "dispatcher");
+	}
+
+	if (springMvcContext == null) {
+	    springMvcContext = springContext;
+	}
+
+	return springMvcContext;
     }
-    
+
     private static ParamService ps = null;
-    
+
     /**
      * 
      * 获取系统参数
      * 
-     * @param name 参数名，对应参数表中id
+     * @param name
+     *            参数名，对应参数表中id
      * @return
      * @see [类、类#方法、类#成员]
      */
-    public static String getSysParam(String name)
-    {
-        if (ps == null)
-        {
-            ps = springContext.getBean(ParamService.class);
-        }
-        Param p = ps.get(name);
-        return p == null ? null : p.getValue();
+    public static String getSysParam(String name) {
+	if (ps == null) {
+	    ps = springContext.getBean(ParamService.class);
+	}
+	Param p = ps.get(name);
+	return p == null ? null : p.getValue();
     }
-    
+
     /**
      * 
      * 获取整形系统参数
      * 
-     * @param name 参数名，对应参数表中id
+     * @param name
+     *            参数名，对应参数表中id
      * @return 没有配置则返回 Integer.MAX_VALUE
      * @see [类、类#方法、类#成员]
      */
-    public static int getIntSysParam(String name)
-    {
-        int v = Integer.MAX_VALUE;
-        String value = getSysParam(name);
-        if (StringUtils.isNotBlank(value))
-        {
-            v = Integer.parseInt(value.trim());
-        }
-        
-        return v;
+    public static int getIntSysParam(String name) {
+	int v = Integer.MAX_VALUE;
+	String value = getSysParam(name);
+	if (StringUtils.isNotBlank(value)) {
+	    v = Integer.parseInt(value.trim());
+	}
+
+	return v;
+    }
+
+    /**
+     * 鉴权的工具方法，此方法加入是为方便jsp页面通过方法的方式来鉴权。
+     * 
+     * @param p
+     * @return
+     * @see [类、类#方法、类#成员]
+     */
+    public static boolean authentication(String p) {
+	if (StringUtils.isBlank(p)) {
+	    return true;
+	}
+
+	HttpServletRequest request = RequestThreadLocal.request.get();
+	// 因放在session中的权限数据加了上下文，所以此次也加上上下文再判断。
+	if (!p.startsWith("http://")) {
+	    p = request.getContextPath() + (p.startsWith("/") ? "" : "/") + p;
+	}
+
+	Set<String> ownPrivs = (Set<String>) request.getSession().getAttribute(CommConstants.SESSION_USER_PRIV_PATHS);
+	if (ownPrivs == null) {
+	    return false;
+	} else {
+	    return ownPrivs.contains(p);
+	}
+
     }
 }

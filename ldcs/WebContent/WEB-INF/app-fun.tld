@@ -35,4 +35,16 @@
     </example>
   </function>
   
+  <function>
+    <description>
+      	判断用时是否有某项权限
+    </description>
+    <name>permission</name>
+    <function-class>com.wja.base.web.AppContext</function-class>
+    <function-signature>boolean authentication(java.lang.String)</function-signature>
+    <example>
+      ${appfn:permission("/user/add")}
+    </example>
+  </function>
+  
 </taglib>
