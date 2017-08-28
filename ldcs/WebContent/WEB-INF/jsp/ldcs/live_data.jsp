@@ -34,7 +34,6 @@
 				<s:message code="liver.broker"/>:
 				<input class="easyui-combotree" name="brokerId_in_String" style="width: 160px"
 					data-options="
-						required:true,
 						url:'${ctx }/user/memberTree',				
 	                    multiple:true,
 						loadFilter:userOrgTreeLoadFilter,
@@ -42,7 +41,6 @@
 				<s:message code="liver"/>:
 				<input class="easyui-combotree" name="liverId_in_String" style="width: 160px"
 					data-options="
-						required:true,
 						url:'${ctx }/liver/tree',				
 	                    multiple:true,
 						loadFilter:liverOrgTreeLoadFilter,

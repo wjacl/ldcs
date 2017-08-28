@@ -55,3 +55,19 @@ INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-query');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-add');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-update');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-delete');
+
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-badd','主播数据录入','/liveData/batchadd','ldcs','1',1,1101);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-badd-query','查询','/liveData/query','ldcs-liveData-badd','0',1,1102);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-badd-add','新增','/liveData/add','ldcs-liveData-badd','0',1,1103);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-badd-update','修改','/liveData/update','ldcs-liveData-badd','0',1,1104);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-badd-delete','删除','/liveData/delete','ldcs-liveData-badd','0',1,1105);
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-query');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-add');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-update');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-delete');

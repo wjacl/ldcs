@@ -15,24 +15,27 @@ import com.wja.ldcs.dao.LiveDataDao;
 import com.wja.ldcs.entity.LiveData;
 
 @Service
-public class LiveDataService extends CommService<LiveData> {
+public class LiveDataService extends CommService<LiveData>
+{
     @Autowired
     private LiveDataDao liveDataDao;
-
+    
     @Autowired
     private PrivilegeControlService privilegeControlService;
-
-    public Page<LiveData> pageQuery(Map<String, Object> params, Page<LiveData> page) {
-	privilegeControlService.liveDataAddDataAuthori(params);
-	page.setPageData(this.liveDataDao.findAll(new CommSpecification<LiveData>(params), page.getPageRequest()));
-	BeanUtil.setCollFieldValues(page.getRows());
-	return page;
+    
+    public Page<LiveData> pageQuery(Map<String, Object> params, Page<LiveData> page)
+    {
+        privilegeControlService.liveDataAddDataAuthori(params);
+        page.setPageData(this.liveDataDao.findAll(new CommSpecification<LiveData>(params), page.getPageRequest()));
+        BeanUtil.setCollFieldValues(page.getRows());
+        return page;
     }
-
-    public List<LiveData> listQuery(Map<String, Object> params, Sort sort) {
-	privilegeControlService.liveDataAddDataAuthori(params);
-	List<LiveData> list = this.liveDataDao.findAll(new CommSpecification<LiveData>(params), sort.getSpringSort());
-	BeanUtil.setCollFieldValues(list);
-	return list;
+    
+    public List<LiveData> listQuery(Map<String, Object> params, Sort sort)
+    {
+        privilegeControlService.liveDataAddDataAuthori(params);
+        List<LiveData> list = this.liveDataDao.findAll(new CommSpecification<LiveData>(params), sort.getSpringSort());
+        BeanUtil.setCollFieldValues(list);
+        return list;
     }
 }

@@ -40,7 +40,6 @@
 				<s:message code="liver.broker"/>:
 				<input class="easyui-combotree" name="broker.id_in_String" style="width: 160px"
 					data-options="
-						required:true,
 						url:'${ctx }/user/memberTree',				
 	                    multiple:true,
 						loadFilter:userOrgTreeLoadFilter">
