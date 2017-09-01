@@ -58,12 +58,16 @@
 					href="javascript:$.ad.gridQuery('liveData_query_form','liveData_grid')"
 					class="easyui-linkbutton" iconCls="icon-search"><s:message
 						code="comm.query" /></a>
+				<a
+					href="javascript:doExport('liveData_grid')"
+					class="easyui-linkbutton" iconCls="icon-down">导 出</a>
 			</form>
 		</div>
 	</div>
 
 	<table id="liveData_grid" 
 		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,selectOnCheck:false,checkOnSelect:false,
+				sortName:'date,brokerId,liverId',sortOrder:'desc,asc,asc',
 				idField:'id',method:'post',toolbar:'#liveData_tb',loadFilter:liveDataDataProcess">
 		<thead>
 			<tr>
@@ -137,7 +141,21 @@
 			</tr>
 		</thead>
 	</table>
+	<form id="exportForm" action="${ctx }/liveData/export" method="post">
+		<input type="hidden" name="brokerId_in_String"/>
+		<input type="hidden" name="liverId_in_String"/>
+		<input type="hidden" name="platform_like_string"/>
+		<input type="hidden" name="date_after_date"/>
+		<input type="hidden" name="date_before_date"/>
+		<input type="hidden" name="sort" value="brokerId,liverId,date"/>
+		<input type="hidden" name="order" value="ASC,ASC,ASC"/>
+	</form>
 	<script type="text/javascript">	
+		function doExport(gridId){
+			var queryParams = $("#" + gridId).datagrid("options").queryParams;
+			$("#exportForm").form("load",queryParams);
+			$('#exportForm').form('submit');
+		}
 		function liveDataDataProcess(data){
 			return data;
 		}

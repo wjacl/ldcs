@@ -31,7 +31,7 @@
 			</app:author>
 		</div>
 		<div>
-			<form id="liveData_query_form">
+			<form id="liveData_query_form" method="post" action="${ctx }/liveData/exportTemplate">
 				<s:message code="liver"/>:
 				<input id="liverCombotree" class="easyui-combotree" name="liverId_in_String" style="width: 160px"
 					data-options="
@@ -40,18 +40,26 @@
 						loadFilter:liverOrgTreeLoadFilter,
 						panelWidth:180">
 				<s:message code="liveData.date"/>
-				: <input class="easyui-datebox" style="width: 100px" id="date" data-options="required:true"
+				: <input class="easyui-datebox" style="width: 100px" id="date" data-options="required:true,value:'${appfn:today()}'"
 						 name="date_eq_date">
+				
+			<app:author path="/liveData/add;/liveData/update">
 				<a
 					href="javascript:liveDataIn.loadData()"
-					class="easyui-linkbutton" iconCls="icon-search"><s:message
-						code="comm.query" /></a>
+					class="easyui-linkbutton" iconCls="icon-edit">生成录入表格</a>
+				<a
+					href="javascript:liveDataIn.exportTemplate()"
+					class="easyui-linkbutton" iconCls="icon-down">导出录入表格</a>
+				<a
+					href="javascript:$('#liveData_import').form('clear');$('#liveData_w').window('open');"
+					class="easyui-linkbutton" iconCls="icon-edit">Excel批量导入</a>
+			</app:author>
 			</form>
 		</div>
 	</div>
 
 	<table id="liveData_grid" 
-		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,selectOnCheck:false,checkOnSelect:false,
+		data-options="rownumbers:true,singleSelect:true,multiSort:true,selectOnCheck:true,checkOnSelect:true,
 				idField:'id',method:'post',toolbar:'#liveData_tb'">
 		<thead>
 			<tr>
@@ -125,6 +133,10 @@
 			</tr>
 		</thead>
 	</table>
+	<form id="exportTemplateForm" method="post" action="${ctx }/liveData/exportTemplate">
+		<input type="hidden" name="liverId_in_String" />
+		<input type="hidden" name="date_eq_date" />
+	</form>
 	<script type="text/javascript">	
 		
 		function liverFormatter(value,row,index){
@@ -144,9 +156,10 @@
 		});
 
 
-		var treeLivers = [];
+		var treeLivers;
 		
 		function liverOrgTreeLoadFilter(data){
+			treeLivers = [];
 			for(var i in data){
 				if(data[i].type == "liver" && data[i].origin.broker){
 					if(data[i].origin.broker.$ref)
@@ -156,6 +169,7 @@
 			
 			var nodes = $.ad.standardIdPidNameArrayToEasyUITree(data);
 			removeHasNoLiverNodes(nodes);
+			treeLivers.reverse();
 			return nodes;
 		}
 		
@@ -228,6 +242,24 @@
 			return node.userType != undefined && node.userType == "B";
 		}
 	</script>
+	<div id="liveData_w" class="easyui-window" title='直播数据导入'
+		data-options="modal:true,closed:true,minimizable:false,maximizable:false,collapsible:false"
+		style="width: 400px; height: 180px;">
+		<div class="content">
+				<form id="liveData_import" method="post" action="${ctx }/liveData/import" enctype="multipart/form-data">
+				
+							<div style="margin-bottom: 10px">
+								<input class="easyui-filebox" name="myfile" 
+									data-options="prompt:'请选择要导入的文件...',required:true,buttonText:'选择文件'" style="width:100%">
+							</div>
+				</form>
+				<div style="text-align: center; padding: 5px 0">
+					<a href="javascript:void(0)" class="easyui-linkbutton"
+						onclick="liveDataIn.doImport()" style="width: 80px">
+						<s:message code="comm.submit" /></a> 
+				</div>
+		</div>
+	</div>
 	<%@ include file="/WEB-INF/jsp/frame/footer.jsp"%>
 </body>
 </html>
