@@ -63,7 +63,7 @@ public class PrivilegeControlService {
 	for (User u : us) {
 	    ids.add(u.getId());
 	}
-	params.put("brokerId_in_String", ids);
+	params.put("brokerId_in_string", ids);
     }
 
     /**
