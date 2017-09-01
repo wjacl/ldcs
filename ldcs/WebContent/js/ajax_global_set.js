@@ -205,6 +205,14 @@ $.ad = {
 		
 	},
 	
+	joinArrayInObjectToString:function(obj){
+		for(var i in obj){
+			if(obj[i] instanceof Array){
+				obj[i] = obj[i].join(",");
+			}
+		}
+	},
+	
 	submitForm:function(formId,gridId,wid,success){
 		var succ;
 		if(success && (typeof success == "function")){

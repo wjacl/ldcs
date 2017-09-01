@@ -90,6 +90,16 @@
       <param-value>classpath:dispatcher-servlet.xml</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
+    <multipart-config>
+		<!-- 上传时文件临时存放的目录 -->
+		<!-- <location>/temp</location> -->
+		<!-- 单个文件的最大大小(byte字节) -->
+		<max-file-size>2097152</max-file-size>
+		<!-- 整个请求的最大大小(byte字节) -->
+		<max-request-size>4194304</max-request-size>
+		<!-- 允许文件的多少字节可以不保存到临时目录(而存在内存中) -->
+		<file-size-threshold>0</file-size-threshold>
+	</multipart-config>
   </servlet>
   <servlet-mapping>
     <servlet-name>dispatcher</servlet-name>
