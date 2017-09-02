@@ -53,11 +53,18 @@ public class LiveDataController {
     @RequestMapping({ "add", "update" })
     @ResponseBody
     public OpResult save(LiveData c) {
+	LiveData dbld = this.liveDataService.findByLiverIdAndDate(c.getLiverId(), c.getDate());
 	boolean add = StringUtils.isBlank(c.getId());
 	if (add) {
+	    if (dbld != null) {
+		return OpResult.addError("该日期数据已存在，不能重复录入，请进行修改！", c);
+	    }
 	    this.liveDataService.add(c);
 	    return OpResult.addOk(c);
 	} else {
+	    if (dbld != null && !dbld.getId().equals(c.getId())) {
+		return OpResult.updateError("该日期数据已存在，不能重复录入，请修改！", c);
+	    }
 	    this.liveDataService.update(c);
 	    return OpResult.updateOk(c);
 	}

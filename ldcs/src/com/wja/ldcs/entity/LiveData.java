@@ -21,224 +21,194 @@ import com.wja.base.util.SetValue;
 @Entity
 @Table(name = "t_ldcs_live_data")
 @Where(clause = " valid = " + CommConstants.DATA_VALID)
-public class LiveData extends CommEntity
-{
-    
+public class LiveData extends CommEntity {
+
     /**
      * 主播ID
      */
     @Column(name = "liver_id", length = 32)
     private String liverId;
-    
+
     /**
      * 经纪人
      */
     @Column(name = "broker_id", length = 32)
     private String brokerId;
-    
+
     @Transient
     @SetValue(clazz = Liver.class, id = "liverId", field = "name")
     private String liverName;
-    
+
     @Transient
     @SetValue(clazz = User.class, id = "brokerId", field = "name")
     private String brokerName;
-    
+
     /**
      * 平台
      */
     @Column(length = 40)
     private String platform;
-    
+
     /**
      * 房间号
      */
     @Column(name = "room_no", length = 30)
     private String roomNo;
-    
+
     /**
      * 主播直播名
      */
     @Column(name = "live_name", length = 60)
     private String liveName;
-    
+
     /**
      * 直播日期
      */
     @DateTimeFormat(pattern = DateUtil.DATE)
     @JSONField(format = DateUtil.DATE)
-    @Column(nullable = false)
     private Date date;
-    
+
     /**
      * 订阅数
      */
     private Integer rss;
-    
+
     /**
      * 订阅增幅
      */
     @Column(name = "rss_grow_rate", precision = 7, scale = 4)
     private BigDecimal rssGrowRate;
-    
+
     /**
      * 人气
      */
     private Integer popularity;
-    
+
     /**
      * 礼物收益
      */
     @Column(name = "gift_earning", precision = 10, scale = 2)
     private BigDecimal giftEarning;
-    
+
     /**
      * 直播时长(分钟)
      */
     @Column(name = "live_duration")
     private Integer liveDuration;
-    
+
     @Column(length = 200)
     private String remark;
-    
-    public String getLiverName()
-    {
-        return liverName;
+
+    public String getLiverName() {
+	return liverName;
     }
-    
-    public void setLiverName(String liverName)
-    {
-        this.liverName = liverName;
+
+    public void setLiverName(String liverName) {
+	this.liverName = liverName;
     }
-    
-    public String getBrokerName()
-    {
-        return brokerName;
+
+    public String getBrokerName() {
+	return brokerName;
     }
-    
-    public void setBrokerName(String brokerName)
-    {
-        this.brokerName = brokerName;
+
+    public void setBrokerName(String brokerName) {
+	this.brokerName = brokerName;
     }
-    
-    public String getLiverId()
-    {
-        return liverId;
+
+    public String getLiverId() {
+	return liverId;
     }
-    
-    public void setLiverId(String liverId)
-    {
-        this.liverId = liverId;
+
+    public void setLiverId(String liverId) {
+	this.liverId = liverId;
     }
-    
-    public String getBrokerId()
-    {
-        return brokerId;
+
+    public String getBrokerId() {
+	return brokerId;
     }
-    
-    public void setBrokerId(String brokerId)
-    {
-        this.brokerId = brokerId;
+
+    public void setBrokerId(String brokerId) {
+	this.brokerId = brokerId;
     }
-    
-    public String getPlatform()
-    {
-        return platform;
+
+    public String getPlatform() {
+	return platform;
     }
-    
-    public void setPlatform(String platform)
-    {
-        this.platform = platform;
+
+    public void setPlatform(String platform) {
+	this.platform = platform;
     }
-    
-    public String getRoomNo()
-    {
-        return roomNo;
+
+    public String getRoomNo() {
+	return roomNo;
     }
-    
-    public void setRoomNo(String roomNo)
-    {
-        this.roomNo = roomNo;
+
+    public void setRoomNo(String roomNo) {
+	this.roomNo = roomNo;
     }
-    
-    public String getLiveName()
-    {
-        return liveName;
+
+    public String getLiveName() {
+	return liveName;
     }
-    
-    public void setLiveName(String liveName)
-    {
-        this.liveName = liveName;
+
+    public void setLiveName(String liveName) {
+	this.liveName = liveName;
     }
-    
-    public Date getDate()
-    {
-        return date;
+
+    public Date getDate() {
+	return date;
     }
-    
-    public void setDate(Date date)
-    {
-        this.date = date;
+
+    public void setDate(Date date) {
+	this.date = date;
     }
-    
-    public Integer getRss()
-    {
-        return rss;
+
+    public Integer getRss() {
+	return rss;
     }
-    
-    public void setRss(Integer rss)
-    {
-        this.rss = rss;
+
+    public void setRss(Integer rss) {
+	this.rss = rss;
     }
-    
-    public BigDecimal getRssGrowRate()
-    {
-        return rssGrowRate;
+
+    public BigDecimal getRssGrowRate() {
+	return rssGrowRate;
     }
-    
-    public void setRssGrowRate(BigDecimal rssGrowRate)
-    {
-        this.rssGrowRate = rssGrowRate;
+
+    public void setRssGrowRate(BigDecimal rssGrowRate) {
+	this.rssGrowRate = rssGrowRate;
     }
-    
-    public Integer getPopularity()
-    {
-        return popularity;
+
+    public Integer getPopularity() {
+	return popularity;
     }
-    
-    public void setPopularity(Integer popularity)
-    {
-        this.popularity = popularity;
+
+    public void setPopularity(Integer popularity) {
+	this.popularity = popularity;
     }
-    
-    public BigDecimal getGiftEarning()
-    {
-        return giftEarning;
+
+    public BigDecimal getGiftEarning() {
+	return giftEarning;
     }
-    
-    public void setGiftEarning(BigDecimal giftEarning)
-    {
-        this.giftEarning = giftEarning;
+
+    public void setGiftEarning(BigDecimal giftEarning) {
+	this.giftEarning = giftEarning;
     }
-    
-    public Integer getLiveDuration()
-    {
-        return liveDuration;
+
+    public Integer getLiveDuration() {
+	return liveDuration;
     }
-    
-    public void setLiveDuration(Integer liveDuration)
-    {
-        this.liveDuration = liveDuration;
+
+    public void setLiveDuration(Integer liveDuration) {
+	this.liveDuration = liveDuration;
     }
-    
-    public String getRemark()
-    {
-        return remark;
+
+    public String getRemark() {
+	return remark;
     }
-    
-    public void setRemark(String remark)
-    {
-        this.remark = remark;
+
+    public void setRemark(String remark) {
+	this.remark = remark;
     }
-    
+
 }

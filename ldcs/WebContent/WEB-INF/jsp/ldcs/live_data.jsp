@@ -66,7 +66,7 @@
 	</div>
 
 	<table id="liveData_grid" 
-		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,selectOnCheck:false,checkOnSelect:false,
+		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,selectOnCheck:true,checkOnSelect:true,
 				sortName:'date,brokerId,liverId',sortOrder:'desc,asc,asc',
 				idField:'id',method:'post',toolbar:'#liveData_tb',loadFilter:liveDataDataProcess">
 		<thead>

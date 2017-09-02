@@ -1,5 +1,6 @@
 package com.wja.ldcs.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,15 @@ public class LiveDataService extends CommService<LiveData> {
     @Autowired
     private PrivilegeControlService privilegeControlService;
 
+    public LiveData findByLiverIdAndDate(String liverId, Date date) {
+	return this.liveDataDao.findByLiverIdAndDate(liverId, date);
+    }
+
     /**
      * 批量保存直播数据，注意：对已存在日期的数据进行的是修改。
      * 
      * @param list
-     * @return
+     * @return 返回保存过后的数据list
      * @see [类、类#方法、类#成员]
      */
     public List<LiveData> batchSave(List<LiveData> list) {
@@ -37,17 +42,20 @@ public class LiveDataService extends CommService<LiveData> {
 	LiveData dbLiveData = null;
 	LiveData ld = null;
 	for (int i = 0; i < list.size(); i++) {
+	    dbLiveData = null;
 	    ld = list.get(i);
 	    if (StringUtils.isNotBlank(ld.getLiverId()) && ld.getDate() != null) {
 		dbLiveData = this.liveDataDao.findByLiverIdAndDate(ld.getLiverId(), ld.getDate());
-		if (dbLiveData != null) {
-		    BeanUtil.copyPropertiesIgnoreNull(ld, dbLiveData);
-		} else {
-		    dbLiveData = ld;
-		}
-
-		list.set(i, this.liveDataDao.save(dbLiveData));
 	    }
+	    if (dbLiveData != null) {
+		BeanUtil.copyPropertiesIgnoreNull(ld, dbLiveData);
+		this.update(dbLiveData);
+	    } else {
+		dbLiveData = ld;
+		this.add(dbLiveData);
+	    }
+
+	    list.set(i, dbLiveData);
 	}
 
 	return list;

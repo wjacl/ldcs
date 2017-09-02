@@ -84,10 +84,10 @@
 		<thead>
 			<tr>
 				<th data-options="field:'ck',checkbox:true"></th>
-				<th data-options="field:'name',width:100"><s:message
+				<th data-options="field:'name',width:90"><s:message
 						code="liver.name"/></th>
 				<th
-					data-options="field:'broker.id',width:100,sortable:'true',formatter:brokerFormatter"><s:message
+					data-options="field:'broker.id',width:90,sortable:'true',formatter:brokerFormatter"><s:message
 						code="liver.broker"/></th>
 				<th
 					data-options="field:'platform',width:100,sortable:'true'"><s:message

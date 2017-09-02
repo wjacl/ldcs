@@ -5,14 +5,6 @@ var liveDataIn = {
 			data = eval('(' + data + ')');
 			$.sm.show("导入完成！");
 			$('#liveData_w').window('close');
-			var faildData = [];
-			for(var i = data.length - 1; i >=0; i--){
-				if(data[i].id == undefined || data[i].id == null || data[i].id == ""){
-					data[i].rowNum = i + 1;
-					faildData.push(data[i]);
-					data.splice(i,1);
-				}
-			}
 			$("#liveData_grid").edatagrid("loadData",data);
 		}});
 	},
