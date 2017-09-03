@@ -118,7 +118,7 @@ public class LiveDataController {
 	Map<String, Object> model = new HashMap<>();
 	model.put("filename", "主播直播数据.xls");
 	model.put("sheetName", "主播直播数据");
-	String[] headers = { "序号", "主播", "经纪人", "所在平台", "直播房间号", "直播名", "日期", "订阅", "订阅增幅", "人气", "礼物收益(员)", "直播时长(分钟)",
+	String[] headers = { "序号", "主播", "经纪人", "所在平台", "直播房间号", "直播名", "日期", "订阅", "订阅增幅", "人气", "礼物收益(元)", "直播时长(分钟)",
 		"备注" };
 	model.put("headers", headers);
 	model.put("hasSerialColumn", true);
@@ -149,7 +149,7 @@ public class LiveDataController {
 	Map<String, Object> model = new HashMap<>();
 	model.put("filename", "主播直播数据导入模板.xls");
 	model.put("sheetName", "主播直播数据");
-	String[] headers = { "序号", "主播", "经纪人", "所在平台", "直播房间号", "直播名", "日期", "订阅", "订阅增幅", "人气", "礼物收益(员)", "直播时长(分钟)",
+	String[] headers = { "序号", "主播", "经纪人", "所在平台", "直播房间号", "直播名", "日期", "订阅", "订阅增幅", "人气", "礼物收益(元)", "直播时长(分钟)",
 		"备注", "主播id", "经纪人id" };
 	model.put("headers", headers);
 	model.put("hasSerialColumn", true);
