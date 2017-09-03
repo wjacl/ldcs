@@ -71,3 +71,19 @@ INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-query
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-add');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-update');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-badd-delete');
+
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveGoal','主播月度目标管理','/liveGoal/manage','ldcs','1',1,1121);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveGoal-query','查询','/liveGoal/query','ldcs-liveGoal','0',1,1122);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveGoal-add','新增','/liveGoal/add','ldcs-liveGoal','0',1,1123);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveGoal-update','修改','/liveGoal/update','ldcs-liveGoal','0',1,1124);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveGoal-delete','删除','/liveGoal/delete','ldcs-liveGoal','0',1,1125);
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-query');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-add');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-update');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-delete');
