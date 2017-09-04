@@ -27,11 +27,11 @@
 			<app:author path="/liveGoal/add;/liveGoal/update">
 				<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="javascript:$('#liveGoal_grid').edatagrid('saveRow')"><s:message code='comm.save' /></a>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:$('#liveGoal_grid').edatagrid('cancelRow')"><s:message code='comm.cancel' /></a>
-				<a  plain="true" 
+				<!-- <a  plain="true" 
 					href="javascript:liveDataIn.loadData()"
-					class="easyui-linkbutton" iconCls="icon-edit">批量生成录入数据</a>
+					class="easyui-linkbutton" iconCls="icon-edit">批量生成录入数据</a> -->
 				<a plain="true" 
-					href="javascript:liveDataIn.exportTemplate()"
+					href="javascript:exportTemplate()"
 					class="easyui-linkbutton" iconCls="icon-down">导出录入表格</a>
 				<a plain="true" 
 					href="javascript:$('#liveData_import').form('clear');$('#liveData_w').window('open');"
@@ -55,11 +55,11 @@
 						loadFilter:liverOrgTreeLoadFilter,
 						panelWidth:180">
 				月份(YYYYMM)
-				: <input class="easyui-numberbox" style="width: 100px" 
+				: <input class="easyui-numberbox" style="width: 80px" 
 					data-options="min:201601,value:currMonth"
 					name="month_gte_intt">
 					-
-				  <input class="easyui-numberbox" style="width: 100px"
+				  <input class="easyui-numberbox" style="width: 80px"
 						data-options="min:201601,value:currMonth"
 					name="month_lte_intt">
 				<a
@@ -138,8 +138,27 @@
 		function doExport(gridId){
 			var queryParams = $("#" + gridId).datagrid("options").queryParams;
 			$("#exportForm").form("load",queryParams);
+			$("#exportForm").form({url:ctx + "/liveGoal/export"});
 			$('#exportForm').form('submit');
 		}
+		
+		function exportTemplate(){
+			var jsonData = $("#liveGoal_query_form").serializeJson();
+			$.ad.joinArrayInObjectToString(jsonData);
+			$("#exportForm").form("load",jsonData);
+			$("#exportForm").form({url:ctx + "/liveGoal/exportTemplate"});
+			$('#exportForm').form('submit');
+		}
+		
+		function doImport(){
+			$("#liveData_import").form('submit',{success:function(data){
+				data = eval('(' + data + ')');
+				$.sm.show("导入完成！");
+				$('#liveData_w').window('close');
+				$("#liveGoal_grid").edatagrid("loadData",data);
+			}});
+		}
+		
 		function liveGoalDataProcess(data){
 			return data;
 		}
@@ -251,7 +270,7 @@
 				</form>
 				<div style="text-align: center; padding: 5px 0">
 					<a href="javascript:void(0)" class="easyui-linkbutton"
-						onclick="liveDataIn.doImport()" style="width: 80px">
+						onclick="doImport()" style="width: 80px">
 						<s:message code="comm.submit" /></a> 
 				</div>
 		</div>
