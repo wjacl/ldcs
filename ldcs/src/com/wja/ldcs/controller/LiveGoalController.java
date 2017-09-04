@@ -133,10 +133,11 @@ public class LiveGoalController
         Map<String, Object> model = new HashMap<>();
         model.put("filename", "主播月度目标.xls");
         model.put("sheetName", "主播月度目标");
-        String[] headers = {"序号", "主播", "经纪人", "月份", "礼物收益目标(元)", "直播时长目标(分钟)", "备注"};
+        String[] headers = {"序号", "主播", "经纪人", "月份", "礼物收益目标(元)", "直播时长目标(分钟)", "备注", "主播id", "经纪人id"};
         model.put("headers", headers);
         model.put("hasSerialColumn", true);
-        String[] fieldNames = {"liverName", "brokerName", "month", "giftEarning", "liveDuration", "remark"};
+        String[] fieldNames =
+            {"liverName", "brokerName", "month", "giftEarning", "liveDuration", "remark", "liverId", "brokerId"};
         model.put("fieldNames", fieldNames);
         
         List<LiveGoal> data = this.liveGoalService.listQuery(params, sort);
