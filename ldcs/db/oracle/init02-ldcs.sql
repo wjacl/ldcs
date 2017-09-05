@@ -87,3 +87,19 @@ INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-query');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-add');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-update');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-delete');
+
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfStandard','绩效评分标准管理','/perfStandard/manage','ldcs','1',1,1201);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfStandard-query','查询','/perfStandard/query','ldcs-perfStandard','0',1,1202);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfStandard-add','新增','/perfStandard/add','ldcs-perfStandard','0',1,1203);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfStandard-update','修改','/perfStandard/update','ldcs-perfStandard','0',1,1204);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfStandard-delete','删除','/perfStandard/delete','ldcs-perfStandard','0',1,1205);
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-query');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-add');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-update');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-delete');
