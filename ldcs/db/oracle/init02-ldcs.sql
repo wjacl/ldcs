@@ -103,3 +103,10 @@ INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-query'
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-add');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-update');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfStandard-delete');
+
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-tj','主播数据统计','/liveData/tj','ldcs','1',1,1117);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-liveData-tj-query','查询','/liveData/tjQuery','ldcs-liveData-tj','0',1,1118);
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-tj');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-tj-query');
