@@ -15,7 +15,7 @@
 		主播月度数据统计
 	</h3>
 	
-	<div id="liveData_tj_tb" style="padding: 5px; height: auto">
+	<div id="liveData_tj_tb" style="padding: 10px;height:50px">
 		<div>
 			<form id="liveData_tj_query_form">
 				<s:message code="liver"/>:
@@ -44,7 +44,7 @@
 		</div>
 	</div>
 
-	<table id="liveData_tj_grid" 
+	<table id="liveData_tj_grid" class="easyui-datagrid"
 		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,
 				sortName:'month,brokerId,liverId',sortOrder:'desc,asc,asc',url:'${ctx }/liveData/tjQuery',
 				idField:'id',method:'post',toolbar:'#liveData_tj_tb'">
@@ -56,14 +56,15 @@
 					data-options="field:'brokerId',width:100,sortable:'true',formatter:brokerFormatter"><s:message
 						code="liver.broker"/></th>
 				<th
-					data-options="field:'month',width:80,align:'center',sortable:'true'">月份</th>	
+					data-options="field:'month',width:80,align:'center',sortable:'true'">月份</th>
 				<th
-					data-options="field:'giftEarning',width:120">礼物收益目标(元)</th>
+					data-options="field:'giftEarning',width:120">礼物收益(元)</th>
 				<th
-					data-options="field:'liveDuration',width:120">直播时长目标(分钟)</th>
+					data-options="field:'liveDuration',width:120">直播时长(分钟)</th>	
 				<th
-					data-options="field:'remark',width:240"><s:message
-						code="liveData.remark"/></th>
+					data-options="field:'giftEarningGoal',width:120">礼物收益目标(元)</th>
+				<th
+					data-options="field:'liveDurationGoal',width:120">直播时长目标(分钟)</th>
 			</tr>
 		</thead>
 	</table>
