@@ -97,4 +97,11 @@ public class LiveDataService extends CommService<LiveData>
         BeanUtil.setCollFieldValues(page.getRows());
         return page;
     }
+    
+    public List<EvaLiverMonth> tongJiListQuery(Map<String, Object> params, Sort sort)
+    {
+        List<EvaLiverMonth> list = this.liveDataTJDao.listQuery(params, sort);
+        BeanUtil.setCollFieldValues(list);
+        return list;
+    }
 }

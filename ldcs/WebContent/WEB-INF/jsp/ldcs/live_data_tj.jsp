@@ -50,21 +50,33 @@
 				idField:'id',method:'post',toolbar:'#liveData_tj_tb'">
 		<thead>
 			<tr>
-				<th data-options="field:'liverId',width:100,sortable:'true',formatter:liverFormatter"><s:message
+				<th rowspan="2" data-options="field:'liverId',width:80,sortable:'true',formatter:liverFormatter"><s:message
 						code="liveData.liver"/></th>
-				<th
-					data-options="field:'brokerId',width:100,sortable:'true',formatter:brokerFormatter"><s:message
+				<th rowspan="2" 
+					data-options="field:'brokerId',width:80,sortable:'true',formatter:brokerFormatter"><s:message
 						code="liver.broker"/></th>
-				<th
+				<th rowspan="2" 
 					data-options="field:'month',width:80,align:'center',sortable:'true'">月份</th>
+				<th colspan="4">礼物收益完成情况</th>
+				<th colspan="4">直播时长完成情况</th>
+			</tr>
+			<tr>
 				<th
-					data-options="field:'giftEarning',width:120">礼物收益(元)</th>
+					data-options="field:'giftEarning',width:90">礼物收益(元)</th>	
 				<th
-					data-options="field:'liveDuration',width:120">直播时长(分钟)</th>	
+					data-options="field:'giftEarningGoal',width:110">礼物收益目标(元)</th>
 				<th
-					data-options="field:'giftEarningGoal',width:120">礼物收益目标(元)</th>
+					data-options="field:'id',width:80,formatter:girfPercFormatter">礼物完成率</th>
+				<th
+					data-options="field:'brokerName',width:80,formatter:girfLastFormatter">礼物差距</th>
+				<th
+					data-options="field:'liveDuration',width:100">直播时长(分钟)</th>
 				<th
 					data-options="field:'liveDurationGoal',width:120">直播时长目标(分钟)</th>
+				<th
+					data-options="field:'liverName',width:80,formatter:duraPercFormatter">时长完成率</th>
+				<th
+					data-options="field:'valid',width:80,formatter:duraLastFormatter">时长差距</th>
 			</tr>
 		</thead>
 	</table>
@@ -79,8 +91,40 @@
 		function doExport(gridId){
 			var queryParams = $("#" + gridId).datagrid("options").queryParams;
 			$("#exportForm").form("load",queryParams);
-			$("#exportForm").form({url:ctx + "/liveData_tj/export"});
+			$("#exportForm").form({url:ctx + "/liveData/tjexport"});
 			$('#exportForm').form('submit');
+		}
+		
+		function girfLastFormatter(value,row,index){
+			if(row.giftEarning && row.giftEarningGoal){
+				if(row.giftEarning < row.giftEarningGoal){
+					return row.giftEarningGoal - row.giftEarning;
+				}
+			}
+			return "";
+		}
+		
+		function girfPercFormatter(value,row,index){
+			if(row.giftEarning && row.giftEarningGoal){
+				return Math.round(row.giftEarning / row.giftEarningGoal * 10000) / 100 + "%";
+			}
+			return "";
+		}
+		
+		function duraPercFormatter(value,row,index){
+			if(row.liveDuration && row.liveDurationGoal){
+				return Math.round(row.liveDuration / row.liveDurationGoal * 10000) / 100 + "%";
+			}
+			return "";
+		}
+		
+		function duraLastFormatter(value,row,index){
+			if(row.liveDuration && row.liveDurationGoal){
+				if(row.liveDuration < row.liveDurationGoal){
+					return row.liveDurationGoal - row.liveDuration;
+				}
+			}
+			return "";
 		}
 		
 		function liverFormatter(value,row,index){

@@ -146,6 +146,82 @@ public class LiveDataController
         }
     }
     
+    @RequestMapping("tjexport")
+    public ModelAndView tjexport(@RequestParam Map<String, Object> params, Sort sort)
+    {
+        Map<String, Object> model = new HashMap<>();
+        model.put("filename", "主播直播月度统计数据.xls");
+        model.put("sheetName", "主播直播月度统计数据");
+        String[] headers = {"序号", "主播", "经纪人", "月份", "礼物收益(元)", "礼物收益目标(元)", "礼物完成率", "礼物差距", "直播时长(分钟)", "直播时长目标(分钟)",
+            "时长完成率", "时长差距"};
+        model.put("headers", headers);
+        model.put("hasSerialColumn", true);
+        String[] fieldNames = {"ev.liverName", "ev.brokerName", "ev.month", "ev.giftEarning", "ev.giftEarningGoal",
+            "giftLv", "giftCj", "ev.liveDuration", "ev.liveDurationGoal", "duraLv", "duraCj"};
+        model.put("fieldNames", fieldNames);
+        
+        List<EvaLiverMonth> data = this.liveDataService.tongJiListQuery(params, sort);
+        List<Map<String, Object>> realList = new ArrayList<>();
+        model.put("data", realList);
+        Map<String, Object> map = null;
+        for (EvaLiverMonth ev : data)
+        {
+            map = new HashMap<>();
+            realList.add(map);
+            map.put("ev", ev);
+            
+            String giftLv = "";
+            String giftCj = "";
+            
+            // 礼物完成率 差距计算
+            if (ev.getGiftEarning() != null && ev.getGiftEarningGoal() != null)
+            {
+                try
+                {
+                    giftLv =
+                        Math.round(ev.getGiftEarning().doubleValue() / ev.getGiftEarningGoal().doubleValue() * 10000)
+                            / 100.0 + "%";
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                
+                if (ev.getGiftEarning().compareTo(ev.getGiftEarningGoal()) < 0)
+                {
+                    giftCj = ev.getGiftEarningGoal().subtract(ev.getGiftEarning()).toString();
+                }
+            }
+            map.put("giftLv", giftLv);
+            map.put("giftCj", giftCj);
+            
+            String duraLv = "";
+            String duraCj = "";
+            
+            // 时长完成率 差距计算
+            if (ev.getLiveDuration() != null && ev.getLiveDurationGoal() != null)
+            {
+                try
+                {
+                    duraLv =
+                        Math.round(((double)ev.getLiveDuration()) / ev.getLiveDurationGoal() * 10000) / 100.0 + "%";
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+                
+                if (ev.getLiveDuration() < ev.getLiveDurationGoal())
+                {
+                    duraCj = ev.getLiveDurationGoal() - ev.getLiveDuration() + "";
+                }
+            }
+            map.put("duraLv", duraLv);
+            map.put("duraCj", duraCj);
+        }
+        return new ModelAndView(new PoiExcelView(), model);
+    }
+    
     @RequestMapping("export")
     public ModelAndView export(@RequestParam Map<String, Object> params, Sort sort)
     {
