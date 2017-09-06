@@ -22,6 +22,11 @@ VALUES('ldcs','信息录入',NULL,NULL,'2',1,1100);
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs');
 
 INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perf','绩效管理',NULL,NULL,'2',1,1200);
+
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perf');
+
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
 VALUES('ldcs-liver','主播信息管理','/liver/manage','ldcs','1',1,1171);
 INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
 VALUES('ldcs-liver-query','查询','/liver/query','ldcs-liver','0',1,1172);
@@ -89,7 +94,7 @@ INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-update');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveGoal-delete');
 
 INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
-VALUES('ldcs-perfStandard','绩效评分标准管理','/perfStandard/manage','ldcs','1',1,1201);
+VALUES('ldcs-perfStandard','绩效评分标准管理','/perfStandard/manage','ldcs-perf','1',1,1201);
 INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
 VALUES('ldcs-perfStandard-query','查询','/perfStandard/query','ldcs-perfStandard','0',1,1202);
 INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
@@ -110,3 +115,19 @@ INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
 VALUES('ldcs-liveData-tj-query','查询','/liveData/tjQuery','ldcs-liveData-tj','0',1,1118);
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-tj');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-liveData-tj-query');
+
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfEval','经纪人绩效评定','/perfEval/manage','ldcs-perf','1',1,1221);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfEval-query','查询','/perfEval/query','ldcs-perfEval','0',1,1222);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfEval-add','新增','/perfEval/add','ldcs-perfEval','0',1,1223);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfEval-update','修改','/perfEval/update','ldcs-perfEval','0',1,1224);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfEval-delete','删除','/perfEval/delete','ldcs-perfEval','0',1,1225);
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-query');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-add');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-update');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-delete');
