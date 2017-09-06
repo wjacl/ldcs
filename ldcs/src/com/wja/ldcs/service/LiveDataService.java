@@ -93,6 +93,7 @@ public class LiveDataService extends CommService<LiveData>
     
     public Page<EvaLiverMonth> tongJiPageQuery(Map<String, Object> params, Page<EvaLiverMonth> page)
     {
+        privilegeControlService.liveDataAddDataAuthori(params);
         this.liveDataTJDao.tongJiPageQuery(params, page);
         BeanUtil.setCollFieldValues(page.getRows());
         return page;
@@ -100,6 +101,7 @@ public class LiveDataService extends CommService<LiveData>
     
     public List<EvaLiverMonth> tongJiListQuery(Map<String, Object> params, Sort sort)
     {
+        privilegeControlService.liveDataAddDataAuthori(params);
         List<EvaLiverMonth> list = this.liveDataTJDao.listQuery(params, sort);
         BeanUtil.setCollFieldValues(list);
         return list;

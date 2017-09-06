@@ -123,6 +123,23 @@ public class LiveDataTJDao
         sql.append(" from t_ldcs_live_data a  ");
         sql.append(" where a.valid = " + CommConstants.DATA_VALID);
         
+        List<String> borkerIds = (List<String>)params.get("brokerId_in_string");
+        if (CollectionUtil.isNotEmpty(borkerIds))
+        {
+            StringBuilder stb = new StringBuilder();
+            for (String s : borkerIds)
+            {
+                stb.append("'" + s + "',");
+            }
+            sql.append(" and a.broker_id in (" + stb.substring(0, stb.length() - 1) + ") ");
+        }
+        
+        String borkerId = (String)params.get("brokerId_eq_String");
+        if (StringUtils.isNotBlank(borkerId))
+        {
+            sql.append(" and a.broker_id = '" + borkerId + "' ");
+        }
+        
         String liverIds = (String)params.get("liverId_in_String");
         if (StringUtils.isNotBlank(liverIds))
         {
