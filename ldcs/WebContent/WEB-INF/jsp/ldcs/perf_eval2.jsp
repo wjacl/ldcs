@@ -32,29 +32,23 @@
 						loadFilter:userOrgTreeLoadFilter,
 						panelWidth:180">
 				月份(YYYYMM)
-				: <input class="easyui-numberbox" style="width: 80px" id="monthInput"
+				: <input class="easyui-numberbox" style="width: 80px" 
 					data-options="min:201601,value:currMonth"
-					name="month_gte_intt">
-				- <input class="easyui-numberbox" style="width: 80px"
-					data-options="min:201601,value:currMonth"
-					name="month_lte_intt">
+					name="month_eq_intt">
 				<a
 					href="javascript:treeReload('liveData_tj_query_form','liveData_tj_grid')"
-					class="easyui-linkbutton" iconCls="icon-search">查询</a>
-				<a
-					href="javascript:greateData('liveData_tj_query_form','liveData_tj_grid')"
-					class="easyui-linkbutton" iconCls="icon-edit">生成评定数据</a>
+					class="easyui-linkbutton" iconCls="icon-search">生成评定表</a>
 			</form>
 		</div>
 	</div>
 
 	<table id="liveData_tj_grid" class="easyui-treegrid"
-		data-options="rownumbers:true,singleSelect:true,multiSort:true,treeField: 'brokerName',onDblClickRow:onDblClickRow,
-				sortName:'month,brokerName',sortOrder:'desc,asc',onBeforeExpand:onBeforeExpand,
+		data-options="rownumbers:true,singleSelect:true,multiSort:true,treeField: 'liverName',onDblClickRow:onDblClickRow,
+				sortName:'month,brokerId,liverId',sortOrder:'desc,asc,asc',
 				idField:'id',method:'post',toolbar:'#liveData_tj_tb',loadFilter:gridDataLoadFilter">
 		<thead>
 			<tr>
-				<th rowspan="2" data-options="field:'brokerName',width:110">经纪人</th>
+				<th rowspan="2" data-options="field:'liverName',width:110">经纪人</th>
 				<th rowspan="2" 
 					data-options="field:'month',width:70,align:'center',sortable:'true'">月份</th>
 				<th colspan="3">礼物收益完成情况(元)</th>
@@ -103,52 +97,13 @@
 		<input type="hidden" name="order" value="DESC,ASC,ASC"/>
 	</form>
 	<script type="text/javascript">	
-	var msta = null;
-	var monthPerfStandards = [];
-	function getMonthPerfStandard(month){
-		if(monthPerfStandards[month] == undefined){
-		$.ajax({
-			  url: ctx + "/perfStandard/getByMonth",
-			  async: false,
-			  dataType:"json",
-			  data:{month:month},
-			  success:function(data){
-				  monthPerfStandards[month] = data;
-				}
-			 });
-		}
-		
-		return monthPerfStandards[month];
-	}
-	
-	function greateData(formId,gridId){
-		var v = $('#monthInput').numberbox('getValue');
-		if(v == ""){
-			$.sm.alert("请在开始月份处录入要生成数据的月份！");
-			return;
-		}
-		$.ajax({
-			  url: ctx + "/perfEval/greateMonthEvaData",
-			  method:"get",
-			  async: false,
-			  dataType:"json",
-			  data:{month:v},
-			  success:function(data){
-				  $.sm.handleResult(data);
-				  if(data.status == $.sm.ResultStatus_Ok){
-				  	treeReload(formId,gridId);
-				  }
-				}
-			 });
-	}
-	
 	function treeReload(formId,gridId){
 		var jsonData = $("#" + formId).serializeJson();
-		/* getMonthPerfStandard(jsonData.month_eq_intt);
+		getMonthPerfStandard(jsonData.month_eq_intt);
 		if(msta == null || msta == "null"){
 			$.sm.alert(jsonData.month_eq_intt + "月的绩效标准尚无制定，不可进行评定！");
 			return;
-		} */
+		}
 		//为解决数组多值，mvc中map接收只能接收到一个的问题，而将数组转为以","间隔的字符串来传递。
 		for(var i in jsonData){
 			if(jsonData[i] instanceof Array){
@@ -156,31 +111,8 @@
 			}
 		}
 		
-		$('#' + gridId).treegrid('options').url='${ctx }/perfEval/query';
+		$('#' + gridId).treegrid('options').url='${ctx }/perfEval/evalList';
 		$('#' + gridId).treegrid('load',jsonData);
-	}
-	
-	function onBeforeExpand(row){
-		if(!row.childrenLoaded){
-			$.ajax({
-				  url: ctx + "/perfEval/getBrokerPerfLiverDetail",
-				  method:"post",
-				  async: false,
-				  dataType:"json",
-				  data:{brokerId:row.brokerId,month:row.month},
-				  success:function(data){
-					  for(var i in data){
-						  data[i].brokerName = data[i].liverName;
-					  }
-					  $('#liveData_tj_grid').treegrid('append',{
-							parent: row.id,
-							data: data
-						});
-						row.childrenLoaded = true;
-					}
-				 });
-		}
-		return true;
 	}
 	
 	var editingId;
@@ -223,7 +155,6 @@
 			t.treegrid('endEdit', editingId);
 			$('#liveData_tj_grid').treegrid('select', editingId);
 			var row = $('#liveData_tj_grid').treegrid('getSelected');
-			msta = getMonthPerfStandard(row.month);
 			row.perfEval = row.gflv * msta.giftProp / 100 + row.dulv * msta.durationProp / 100 + parseFloat(row.gradeProp);
 			row.perfEvalText = "(" + row.gflv + "% * " + msta.giftProp + "%) + (" + row.dulv + "% * " + msta.durationProp + "%) + " + row.gradeProp + "% = " + row.perfEval + "%";
 			row.perfComm = Math.round(row.comm * row.perfEval) / 100,
@@ -254,16 +185,158 @@
 		return 'background-color:#ffee00;color:red;font-weight:700;';
 	}
 	
-		function gridDataLoadFilter(data){
-			var row;
-			for(var i in data.rows){
-				row = data.rows[i];
-				row.children = [];
-				row.state = "closed";
-				row.childrenLoaded = false;
+	var msta = null;
+	function getMonthPerfStandard(month){
+		$.ajax({
+			  url: ctx + "/perfStandard/getByMonth",
+			  async: false,
+			  dataType:"json",
+			  data:{month:month},
+			  success:function(data){
+					msta = data;
+				}
+			 });
+	}
+		function computeGiftComm(month,gift,goal){
+			var res = {mess:"",comm:0};
+			if(goal == undefined){
+				res.mess = "没有定目标！";
+				return res;
 			}
 			
-			return data;
+			if(gift < goal){
+				res.mess = "未完成目标!";
+			}
+			else{
+				var count = 0;
+				var levelInterval = goal * msta.commLevelInterval / 100;
+				var compValue = goal;
+				var commProp = msta.commLevelBaseProp;
+				while(gift > 0){
+					if(count == 0){
+						res.comm += goal * commProp / 100;
+						res.mess = "(" + goal + " * " + commProp + "%) ";
+					}
+					else {
+						if(gift > levelInterval){
+							compValue = levelInterval;
+						}
+						else {
+							compValue = gift;
+						}
+						commProp += msta.commLevelPropInterval;
+						res.comm += compValue * commProp / 100; 
+						res.mess += " + (" + compValue + " * " + commProp + "%) ";
+					}
+
+					gift -= compValue;
+					count++;
+				}
+				res.mess += " = " + res.comm;
+			}
+			return res;
+		}
+		
+		function gridDataLoadFilter(data){
+			
+			var lastPid = null;
+			var lastRow = null;
+			var count = 0;
+			var giftOkCount = 0;
+			var duraOKCount = 0;
+			var giftComm = 0;
+			var brokers = [];
+			for(var i in data.rows){
+				var row = data.rows[i];
+				row.gflv = 0;
+				if(row.giftEarning && row.giftEarningGoal){
+					row.gflv = Math.round(row.giftEarning / row.giftEarningGoal * 10000) / 100;
+					row.gflvText = row.gflv + "%";
+				}
+				row.dulv = 0;
+				if(row.liveDuration && row.liveDurationGoal){
+					row.dulv = Math.round(row.liveDuration / row.liveDurationGoal * 10000) / 100;
+					row.dulvText = row.dulv + "%";
+				}
+				//礼物提成
+				var commRes = computeGiftComm(row.month,row.giftEarning,row.giftEarningGoal);
+				row.comm = commRes.comm;
+				row.commMess = commRes.mess;
+				row.id = i + "";
+				row._parentId = row.brokerId + "-" + row.month;
+				
+				if(lastPid != row._parentId){	
+					if(lastPid != null){
+						var xgflv = Math.round(giftOkCount / count * 10000) / 100;
+						var xdulv = Math.round(duraOKCount / count * 10000) / 100;
+						var xperfEval = xgflv * msta.giftProp / 100 + xdulv * msta.durationProp / 100 + msta.gradeProp;
+						brokers.push({
+							id:lastPid,
+							_parentId:null,
+							month:lastRow.month,
+							brokerId:lastRow.brokerId,
+							brokerName:lastRow.brokerName,
+							liverName:lastRow.brokerName,
+							gflv:xgflv,
+							gflvText: giftOkCount + " / " + count + " = " + xgflv + "%",
+							dulv:xdulv,
+							dulvText: duraOKCount + " / " + count + " = " + xdulv + "%",
+							comm:giftComm,
+							commMess:giftComm,
+							gradeProp:0,
+							perfEval:xperfEval,
+							perfEvalText : "(" + xgflv + "% * " + msta.giftProp + "%) + (" + xdulv + "% * " + msta.durationProp + "%) + " + msta.gradeProp + "% = " + xperfEval + "%",
+							perfComm : Math.round(giftComm * xperfEval) / 100,
+							remark:"",
+							state:"closed"
+						});
+					}
+					
+					lastPid = row._parentId;
+					giftOkCount = 0;
+					duraOKCount = 0;
+					count = 0;
+					giftComm = 0;
+				}
+				
+				count++;
+				giftComm += commRes.comm;
+				if(row.gflv >= 100){
+					giftOkCount++;
+				}
+				if(row.dulv >= 100){
+					duraOKCount++;
+				}
+				lastRow = row;
+			}
+			
+			if(count > 0){
+				var xgflv = Math.round(giftOkCount / count * 10000) / 100;
+				var xdulv = Math.round(duraOKCount / count * 10000) / 100;
+				var xperfEval = xgflv * msta.giftProp / 100 + xdulv * msta.durationProp / 100 + msta.gradeProp;
+				brokers.push({
+					id:lastPid,
+					_parentId:null,
+					month:lastRow.month,
+					brokerId:lastRow.brokerId,
+					brokerName:lastRow.brokerName,
+					liverName:lastRow.brokerName,
+					gflv:xgflv,
+					gflvText: giftOkCount + " / " + count + " = " + xgflv + "%",
+					dulv:xdulv,
+					dulvText: duraOKCount + " / " + count + " = " + xdulv + "%",
+					comm:giftComm,
+					commMess:giftComm,
+					gradeProp:0,
+					perfEval:xperfEval,
+					perfEvalText : "(" + xgflv + "% * " + msta.giftProp + "%) + (" + xdulv + "% * " + msta.durationProp + "%) + " + msta.gradeProp + "%",
+					perfComm : Math.round(giftComm * xperfEval) / 100,
+					remark:"",
+					state:"closed"
+				});
+			}
+			var rows = brokers.concat(data.rows);
+			return {total:rows.length,rows:rows};
 		}
 	
 		function userOrgTreeLoadFilter(data){

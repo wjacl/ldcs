@@ -59,7 +59,7 @@
 						options:{
 							min:201601}}">月份</th>	
 				<th colspan="3">权重比例%</th>
-				<th colspan="4">礼物收益提成%</th>
+				<th colspan="3">礼物收益提成%</th>
 				<th rowspan="2"
 					data-options="field:'remark',align:'center',width:280,editor:{type:'textarea',
 						options:{
@@ -88,29 +88,24 @@
 							min:0,
 							max:100}}">部门评分</th>
 				<th
-					data-options="field:'commLevelBase',width:100,formatter:percentFormatter,
-					editor:{type:'numberbox',
-						options:{
-							min:0}}">基等级上值</th>
-				<th
 					data-options="field:'commLevelBaseProp',width:100,formatter:percentFormatter,
 					editor:{type:'numberbox',
 						options:{
 							precision:2,
 							min:0,
-							max:100}}">基等级提成比例</th>
+							max:100}}">保底提成比例</th>
 				<th
 					data-options="field:'commLevelInterval',width:100,formatter:percentFormatter,
 					editor:{type:'numberbox',
 						options:{
-							min:0}}">等级递增值</th>
+							min:0}}">比例分级递增值</th>
 				<th
-					data-options="field:'commLevelPropInterval',width:100,formatter:percentFormatter,
+					data-options="field:'commLevelPropInterval',width:120,formatter:percentFormatter,
 					editor:{type:'numberbox',
 						options:{
 							precision:2,
 							min:0,
-							max:100}}">提成比例递增值</th>
+							max:100}}">分级提成比例递增值</th>
 			</tr>
 		</thead>
 	</table>
