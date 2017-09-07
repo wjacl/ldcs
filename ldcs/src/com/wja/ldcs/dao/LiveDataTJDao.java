@@ -157,6 +157,13 @@ public class LiveDataTJDao
         {
             sql.append(" and DATE_FORMAT(a.date,'%Y%m') <= " + monthLte);
         }
+        
+        String month = (String)params.get("month_eq_intt");
+        if (StringUtils.isNotBlank(monthLte))
+        {
+            sql.append(" and DATE_FORMAT(a.date,'%Y%m') = " + month);
+        }
+        
         sql.append(" group by a.broker_id,a.liver_id,DATE_FORMAT(a.date,'%Y%m')) aa");
         sql.append(" LEFT JOIN t_ldcs_live_goal b ");
         sql.append("    on (aa.liver_id = b.liver_id and aa.month = b.month ");

@@ -5,39 +5,24 @@ import java.math.BigDecimal;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import org.hibernate.annotations.Where;
 
 import com.wja.base.common.CommConstants;
 import com.wja.base.common.CommEntity;
-import com.wja.base.system.entity.User;
-import com.wja.base.util.SetValue;
 
 @Entity
-@Table(name = "t_ldcs_eva_liver_month")
+@Table(name = "t_ldcs_eva_Broker_month")
 @Where(clause = " valid = " + CommConstants.DATA_VALID)
 public class EvaBrokerMonth extends CommEntity
 {
-    
-    /**
-     * 主播ID
-     */
-    @Column(name = "liver_id", length = 32)
-    private String liverId;
-    
     /**
      * 经纪人
      */
     @Column(name = "broker_id", length = 32)
     private String brokerId;
     
-    @Transient
-    @SetValue(clazz = Liver.class, id = "liverId", field = "name")
-    private String liverName;
-    
-    @Transient
-    @SetValue(clazz = User.class, id = "brokerId", field = "name")
+    @Column(name = "broker_name", length = 40)
     private String brokerName;
     
     /**
@@ -46,38 +31,70 @@ public class EvaBrokerMonth extends CommEntity
     private Integer month;
     
     /**
-     * 礼物收益
+     * 礼物完成率
      */
-    @Column(name = "gift_earning", precision = 10, scale = 2)
-    private BigDecimal giftEarning;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal gflv;
     
     /**
-     * 直播时长(分钟)
+     * 礼物完成率计算式
      */
-    @Column(name = "live_duration")
-    private Integer liveDuration;
+    @Column(name = "gflv_text", length = 40)
+    private String gflvText;
     
     /**
-     * 礼物收益
+     * 直播时长完成率
      */
-    @Column(name = "gift_earning_goal", precision = 10, scale = 2)
-    private BigDecimal giftEarningGoal;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal dulv;
     
     /**
-     * 直播时长(分钟)
+     * 直播时长完成率计算式
      */
-    @Column(name = "live_duration_goal")
-    private Integer liveDurationGoal;
+    @Column(name = "dulv_text", length = 40)
+    private String dulvText;
     
-    public String getLiverName()
-    {
-        return liverName;
-    }
+    /**
+     * 礼物提成
+     */
+    @Column(precision = 10, scale = 2)
+    private BigDecimal comm;
     
-    public void setLiverName(String liverName)
-    {
-        this.liverName = liverName;
-    }
+    /**
+     * 礼物提成计算式
+     */
+    @Column(name = "comm_mess", length = 400)
+    private String commMess;
+    
+    /**
+     * 部门评分
+     */
+    @Column(name = "grade_prop", precision = 5, scale = 2)
+    private BigDecimal gradeProp;
+    
+    /**
+     * 评分说明
+     */
+    @Column(length = 200)
+    private String remark;
+    
+    /**
+     * 权重得分
+     */
+    @Column(name = "perf_eval", precision = 5, scale = 2)
+    private BigDecimal perfEval;
+    
+    /**
+     * 权重计算式
+     */
+    @Column(name = "perf_eval_text", length = 400)
+    private String perfEvalText;
+    
+    /**
+     * 绩效提成
+     */
+    @Column(name = "perf_comm", precision = 10, scale = 2)
+    private BigDecimal perfComm;
     
     public String getBrokerName()
     {
@@ -87,16 +104,6 @@ public class EvaBrokerMonth extends CommEntity
     public void setBrokerName(String brokerName)
     {
         this.brokerName = brokerName;
-    }
-    
-    public String getLiverId()
-    {
-        return liverId;
-    }
-    
-    public void setLiverId(String liverId)
-    {
-        this.liverId = liverId;
     }
     
     public String getBrokerId()
@@ -119,44 +126,113 @@ public class EvaBrokerMonth extends CommEntity
         this.month = month;
     }
     
-    public BigDecimal getGiftEarning()
+    public BigDecimal getGflv()
     {
-        return giftEarning;
+        return gflv;
     }
     
-    public void setGiftEarning(BigDecimal giftEarning)
+    public void setGflv(BigDecimal gflv)
     {
-        this.giftEarning = giftEarning;
+        this.gflv = gflv;
     }
     
-    public Integer getLiveDuration()
+    public String getGflvText()
     {
-        return liveDuration;
+        return gflvText;
     }
     
-    public void setLiveDuration(Integer liveDuration)
+    public void setGflvText(String gflvText)
     {
-        this.liveDuration = liveDuration;
+        this.gflvText = gflvText;
     }
     
-    public BigDecimal getGiftEarningGoal()
+    public BigDecimal getDulv()
     {
-        return giftEarningGoal;
+        return dulv;
     }
     
-    public void setGiftEarningGoal(BigDecimal giftEarningGoal)
+    public void setDulv(BigDecimal dulv)
     {
-        this.giftEarningGoal = giftEarningGoal;
+        this.dulv = dulv;
     }
     
-    public Integer getLiveDurationGoal()
+    public String getDulvText()
     {
-        return liveDurationGoal;
+        return dulvText;
     }
     
-    public void setLiveDurationGoal(Integer liveDurationGoal)
+    public void setDulvText(String dulvText)
     {
-        this.liveDurationGoal = liveDurationGoal;
+        this.dulvText = dulvText;
     }
     
+    public BigDecimal getComm()
+    {
+        return comm;
+    }
+    
+    public void setComm(BigDecimal comm)
+    {
+        this.comm = comm;
+    }
+    
+    public String getCommMess()
+    {
+        return commMess;
+    }
+    
+    public void setCommMess(String commMess)
+    {
+        this.commMess = commMess;
+    }
+    
+    public BigDecimal getGradeProp()
+    {
+        return gradeProp;
+    }
+    
+    public void setGradeProp(BigDecimal gradeProp)
+    {
+        this.gradeProp = gradeProp;
+    }
+    
+    public String getRemark()
+    {
+        return remark;
+    }
+    
+    public void setRemark(String remark)
+    {
+        this.remark = remark;
+    }
+    
+    public BigDecimal getPerfEval()
+    {
+        return perfEval;
+    }
+    
+    public void setPerfEval(BigDecimal perfEval)
+    {
+        this.perfEval = perfEval;
+    }
+    
+    public String getPerfEvalText()
+    {
+        return perfEvalText;
+    }
+    
+    public void setPerfEvalText(String perfEvalText)
+    {
+        this.perfEvalText = perfEvalText;
+    }
+    
+    public BigDecimal getPerfComm()
+    {
+        return perfComm;
+    }
+    
+    public void setPerfComm(BigDecimal perfComm)
+    {
+        this.perfComm = perfComm;
+    }
 }

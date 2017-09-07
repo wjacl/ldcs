@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,15 +14,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.wja.base.common.OpResult;
+import com.wja.base.util.BeanUtil;
 import com.wja.base.util.DateUtil;
 import com.wja.base.util.Page;
 import com.wja.base.util.PoiExcelUtil.DataFormat;
 import com.wja.base.util.Sort;
 import com.wja.base.web.view.PoiExcelView;
+import com.wja.ldcs.entity.EvaBrokerMonth;
 import com.wja.ldcs.entity.EvaLiverMonth;
 import com.wja.ldcs.entity.LiveData;
+import com.wja.ldcs.service.EvaBrokerMonthService;
 import com.wja.ldcs.service.LiveDataService;
-import com.wja.ldcs.service.LiverService;
 
 @Controller
 @RequestMapping("/perfEval")
@@ -33,7 +34,7 @@ public class PerfEvalController
     private LiveDataService liveDataService;
     
     @Autowired
-    private LiverService liverService;
+    private EvaBrokerMonthService evaBrokerMonthService;
     
     @RequestMapping("manage")
     public String manage()
@@ -41,44 +42,31 @@ public class PerfEvalController
         return "ldcs/perf_eval";
     }
     
-    @RequestMapping("tjQuery")
-    @ResponseBody
-    public Page<EvaLiverMonth> tongJiPageQuery(@RequestParam Map<String, Object> params, Page<EvaLiverMonth> page)
-    {
-        return this.liveDataService.tongJiPageQuery(params, page);
-    }
-    
     @RequestMapping({"add", "update"})
     @ResponseBody
-    public OpResult save(LiveData c)
+    public OpResult save(EvaBrokerMonth c)
     {
-        LiveData dbld = this.liveDataService.findByLiverIdAndDate(c.getLiverId(), c.getDate());
-        boolean add = StringUtils.isBlank(c.getId());
-        if (add)
+        c.setId(null);
+        EvaBrokerMonth dbld = this.evaBrokerMonthService.findByBrokerIdAndMonth(c.getBrokerId(), c.getMonth());
+        if (dbld == null)
         {
-            if (dbld != null)
-            {
-                return OpResult.addError("该日期数据已存在，不能重复录入，请进行修改！", c);
-            }
-            this.liveDataService.add(c);
+            this.evaBrokerMonthService.add(c);
             return OpResult.addOk(c);
         }
         else
         {
-            if (dbld != null && !dbld.getId().equals(c.getId()))
-            {
-                return OpResult.updateError("该日期数据已存在，不能重复录入，请修改！", c);
-            }
-            this.liveDataService.update(c);
-            return OpResult.updateOk(c);
+            BeanUtil.copyPropertiesIgnoreNull(c, dbld);
+            this.evaBrokerMonthService.update(dbld);
+            return OpResult.updateOk(dbld);
         }
+        
     }
     
     @RequestMapping("query")
     @ResponseBody
-    public Page<LiveData> pageQuery(@RequestParam Map<String, Object> params, Page<LiveData> page)
+    public Page<EvaBrokerMonth> pageQuery(@RequestParam Map<String, Object> params, Page<EvaBrokerMonth> page)
     {
-        return this.liveDataService.pageQuery(params, page);
+        return this.evaBrokerMonthService.pageQuery(params, page);
     }
     
     @RequestMapping("tjexport")
@@ -193,9 +181,13 @@ public class PerfEvalController
     
     @RequestMapping("evalList")
     @ResponseBody
-    public List<EvaLiverMonth> evalListQuery(@RequestParam Map<String, Object> params, Sort sort)
+    public Page<EvaLiverMonth> evalListQuery(@RequestParam Map<String, Object> params, Sort sort)
     {
-        return this.liveDataService.tongJiListQuery(params, sort);
+        List<EvaLiverMonth> list = this.liveDataService.tongJiListQuery(params, sort);
+        Page<EvaLiverMonth> page = new Page<>();
+        page.setTotal((long)list.size());
+        page.setRows(list);
+        return page;
     }
     
     @RequestMapping("delete")
