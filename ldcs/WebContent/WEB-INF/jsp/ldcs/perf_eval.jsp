@@ -17,7 +17,7 @@
 	
 	<div id="liveData_tj_tb" style="padding: 10px;height:80px">
 		<div style="margin-bottom: 5px">
-				<a href="javascript:edit()" class="easyui-linkbutton"
+				<a  href="#" onclick="javascript:edit();" class="easyui-linkbutton"
 					iconCls="icon-edit" plain="true">编辑</a> 
 				<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="javascript:save()"><s:message code='comm.save' /></a>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:cancel()"><s:message code='comm.cancel' /></a>
@@ -49,7 +49,7 @@
 	</div>
 
 	<table id="liveData_tj_grid" class="easyui-treegrid"
-		data-options="rownumbers:true,singleSelect:true,multiSort:true,treeField: 'brokerName',onDblClickRow:onDblClickRow,
+		data-options="rownumbers:true,pagination:true,singleSelect:true,multiSort:true,treeField: 'brokerName',onDblClickRow:onDblClickRow,
 				sortName:'month,brokerName',sortOrder:'desc,asc',onBeforeExpand:onBeforeExpand,
 				idField:'id',method:'post',toolbar:'#liveData_tj_tb',loadFilter:gridDataLoadFilter">
 		<thead>
@@ -57,8 +57,6 @@
 				<th rowspan="2" data-options="field:'brokerName',width:110">经纪人</th>
 				<th rowspan="2" 
 					data-options="field:'month',width:70,align:'center',sortable:'true'">月份</th>
-				<th colspan="3">礼物收益完成情况(元)</th>
-				<th colspan="3">直播时长完成情况(分钟)</th>
 				<th rowspan="2"
 					data-options="field:'gradeProp',width:60,formatter:valuePercFormatter,align:'right',
 						editor:{type:'numberbox',
@@ -66,16 +64,16 @@
 							precision:2}},
 						styler:zhuozhongStyle">部门评分</th>
 				<th rowspan="2"
-					data-options="field:'perfEval',width:60,formatter:valuePercFormatter,align:'right'">权重得分</th>
+					data-options="field:'remark',width:160,editor:'text'">评分说明</th>
+				<th rowspan="2"
+					data-options="field:'perfEvalText',width:'auto'">权重得分</th>
 				<th rowspan="2"
 					data-options="field:'comm',width:80,align:'right'">礼物提成</th>
 				<th rowspan="2"
 					data-options="field:'perfComm',width:80,align:'right',
 						styler:zhuozhongStyle">绩效提成</th>
-				<th rowspan="2"
-					data-options="field:'remark',width:100,editor:'text'">评分说明</th>
-				<th rowspan="2"
-					data-options="field:'perfEvalText',width:'auto'">权重计算明细</th>
+				<th colspan="3">礼物收益完成情况(元)</th>
+				<th colspan="3">直播时长完成情况(分钟)</th>
 				<th rowspan="2"
 					data-options="field:'commMess',width:'auto'">礼物提成明细</th>
 			</tr>
@@ -129,7 +127,7 @@
 		}
 		$.ajax({
 			  url: ctx + "/perfEval/greateMonthEvaData",
-			  method:"get",
+			  method:"post",
 			  async: false,
 			  dataType:"json",
 			  data:{month:v},
