@@ -287,10 +287,6 @@
 		                    </div>
 						</td>
 						<td>
-							<div style="margin-bottom: 10px">
-								<input class="easyui-datebox" name="leaveDate" style="width: 100%"
-									data-options="label:'<s:message code="liver.leaveDate"/>:'">
-							</div>
 						</td>
                     </tr>
                     <tr>
