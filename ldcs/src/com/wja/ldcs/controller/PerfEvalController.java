@@ -73,7 +73,7 @@ public class PerfEvalController
     
     @RequestMapping("greateMonthEvaData")
     @ResponseBody
-    public OpResult greateMonthEvaData(Integer month)
+    public OpResult greateMonthEvaData(String brokerId_in_String, Integer month)
     {
         PerfStandard pd = this.perfStandardService.findByMonth(month);
         if (pd == null)
@@ -82,20 +82,18 @@ public class PerfEvalController
         }
         OpResult opr = OpResult.ok();
         opr.setMess("绩效数据已生成！");
-        if (this.evaBrokerMonthService.getMonthCount(month) == 0)
+        Map<String, Object> params = new HashMap<>();
+        params.put("month_eq_intt", month + "");
+        params.put("brokerId_in_String", brokerId_in_String);
+        Sort sort = new Sort("brokerId,liverId", "ASC,ASC");
+        List<EvaLiverMonth> list = this.liveDataService.tongJiListQuery(params, sort);
+        if (CollectionUtil.isNotEmpty(list))
         {
-            Map<String, Object> params = new HashMap<>();
-            params.put("month_eq_intt", month + "");
-            Sort sort = new Sort("brokerId,liverId", "ASC,ASC");
-            List<EvaLiverMonth> list = this.liveDataService.tongJiListQuery(params, sort);
-            if (CollectionUtil.isNotEmpty(list))
-            {
-                this.greateAndSaveEvalData(list, month, pd);
-            }
-            else
-            {
-                opr.setMess("没有" + month + "月的直播数据，不能生成绩效数据！");
-            }
+            this.greateAndSaveEvalData(list, month, pd);
+        }
+        else
+        {
+            opr.setMess("没有" + month + "月的直播数据，不能生成绩效数据！");
         }
         return opr;
     }
@@ -165,22 +163,36 @@ public class PerfEvalController
         double giftComm = 0;
         EvaBrokerMonth ebm = null;
         List<EvaBrokerMonth> brokers = new ArrayList<>();
+        int index = 0;
         for (EvaLiverMonth row : list)
         {
             row.setGflv(0.0);
             if (row.getGiftEarning() != null && row.getGiftEarningGoal() != null)
             {
                 row.setGflv(Math.round(row.getGiftEarning() / row.getGiftEarningGoal() * 10000) / 100.0);
-                row.setGflvText(row.getGflv() + "%");
+                row.setGflvText((row.getGflv() + "%").replace(".0%", "%"));
             }
             row.setDulv(0.0);
             if (row.getLiveDuration() != null && row.getLiveDurationGoal() != null)
             {
                 row.setDulv(Math.round(row.getLiveDuration() / row.getLiveDurationGoal() * 10000) / 100.0);
-                row.setDulvText(row.getDulv() + "%");
+                row.setDulvText((row.getDulv() + "%").replace(".0%", "%"));
             }
             // 礼物提成
             this.computeGiftComm(row, pd);
+            if (row.getCommMess() != null)
+            {
+                row.setCommMess(row.getCommMess().replace(".0%", "%"));
+            }
+            EvaLiverMonth dbelm =
+                this.evaBrokerMonthService.findByBrokerIdAndLiverIdAndMonth(row.getBrokerId(), row.getLiverId(), month);
+            if (dbelm != null)
+            {
+                BeanUtil.copyPropertiesIgnoreNull(row, dbelm);
+                list.set(index, dbelm);
+            }
+            
+            index++;
             
             if (!row.getBrokerId().equals(lastPid))
             {
@@ -188,23 +200,34 @@ public class PerfEvalController
                 {
                     double xgflv = Math.round(1.0 * giftOkCount / count * 10000) / 100.0;
                     double xdulv = Math.round(1.0 * duraOKCount / count * 10000) / 100.0;
-                    double xperfEval = xgflv * pd.getGiftProp().doubleValue() / 100
-                        + xdulv * pd.getDurationProp().doubleValue() / 100 + pd.getGradeProp().doubleValue();
-                    ebm = new EvaBrokerMonth();
+                    ebm = this.evaBrokerMonthService.findByBrokerIdAndMonth(lastRow.getBrokerId(), month);
+                    if (ebm == null)
+                    {
+                        ebm = new EvaBrokerMonth();
+                    }
                     brokers.add(ebm);
                     ebm.setBrokerId(lastRow.getBrokerId());
                     ebm.setBrokerName(lastRow.getBrokerName());
                     ebm.setMonth(month);
                     ebm.setGflv(xgflv);
-                    ebm.setGflvText(giftOkCount + " / " + count + " = " + xgflv + "%");
+                    ebm.setGflvText((giftOkCount + " / " + count + " = " + xgflv + "%").replace(".0%", "%"));
                     ebm.setDulv(xdulv);
-                    ebm.setDulvText(duraOKCount + " / " + count + " = " + xdulv + "%");
+                    ebm.setDulvText((duraOKCount + " / " + count + " = " + xdulv + "%").replace(".0%", "%"));
                     ebm.setComm(giftComm);
                     ebm.setCommMess(giftComm + "");
-                    ebm.setGradeProp(pd.getGradeProp().doubleValue());
+                    if (ebm.getGradeProp() == null)
+                    {
+                        ebm.setGradeProp(pd.getGradeProp().doubleValue());
+                    }
+                    
+                    double xperfEval = xgflv * pd.getGiftProp().doubleValue() / 100
+                        + xdulv * pd.getDurationProp().doubleValue() / 100 + ebm.getGradeProp();
                     ebm.setPerfEval(xperfEval);
-                    ebm.setPerfEvalText("(" + xgflv + "% * " + pd.getGiftProp() + "%) + (" + xdulv + "% * "
-                        + pd.getDurationProp() + "%) + " + pd.getGradeProp() + "% = " + xperfEval + "%");
+                    
+                    String pft = "(" + xgflv + "% * " + pd.getGiftProp() + "%) + (" + xdulv + "% * "
+                        + pd.getDurationProp() + "%) + " + ebm.getGradeProp() + "% = " + xperfEval + "%";
+                    ebm.setPerfEvalText(pft.replace(".00%", "%").replace(".0%", "%"));
+                    
                     ebm.setPerfComm(Math.round(giftComm * xperfEval) / 100.0);
                 }
                 
@@ -233,24 +256,34 @@ public class PerfEvalController
         {
             double xgflv = Math.round(1.0 * giftOkCount / count * 10000) / 100.0;
             double xdulv = Math.round(1.0 * duraOKCount / count * 10000) / 100.0;
-            double xperfEval = xgflv * pd.getGiftProp().doubleValue() / 100
-                + xdulv * pd.getDurationProp().doubleValue() / 100 + pd.getGradeProp().doubleValue();
-            ebm = new EvaBrokerMonth();
+            ebm = this.evaBrokerMonthService.findByBrokerIdAndMonth(lastRow.getBrokerId(), month);
+            if (ebm == null)
+            {
+                ebm = new EvaBrokerMonth();
+            }
             brokers.add(ebm);
             ebm.setBrokerId(lastRow.getBrokerId());
             ebm.setBrokerName(lastRow.getBrokerName());
             ebm.setMonth(month);
             ebm.setGflv(xgflv);
-            ebm.setGflvText(giftOkCount + " / " + count + " = " + xgflv + "%");
+            ebm.setGflvText((giftOkCount + " / " + count + " = " + xgflv + "%").replace(".0%", "%"));
             ebm.setDulv(xdulv);
-            ebm.setDulvText(duraOKCount + " / " + count + " = " + xdulv + "%");
+            ebm.setDulvText((duraOKCount + " / " + count + " = " + xdulv + "%").replace(".0%", "%"));
             ebm.setComm(giftComm);
             ebm.setCommMess(giftComm + "");
-            ebm.setGradeProp(pd.getGradeProp().doubleValue());
+            if (ebm.getGradeProp() == null)
+            {
+                ebm.setGradeProp(pd.getGradeProp().doubleValue());
+            }
+            
+            double xperfEval = xgflv * pd.getGiftProp().doubleValue() / 100
+                + xdulv * pd.getDurationProp().doubleValue() / 100 + ebm.getGradeProp();
             ebm.setPerfEval(xperfEval);
+            
             String pft = "(" + xgflv + "% * " + pd.getGiftProp() + "%) + (" + xdulv + "% * " + pd.getDurationProp()
-                + "%) + " + pd.getGradeProp() + "% = " + xperfEval + "%";
-            ebm.setPerfEvalText(pft.replace(".00%", "%"));
+                + "%) + " + ebm.getGradeProp() + "% = " + xperfEval + "%";
+            ebm.setPerfEvalText(pft.replace(".00%", "%").replace(".0%", "%"));
+            
             ebm.setPerfComm(Math.round(giftComm * xperfEval) / 100.0);
         }
         this.evaBrokerMonthService.batchSave(brokers);
@@ -297,17 +330,6 @@ public class PerfEvalController
             }
         }
         return new ModelAndView(new PoiExcelView(), model);
-    }
-    
-    @RequestMapping("evalList")
-    @ResponseBody
-    public Page<EvaLiverMonth> evalListQuery(@RequestParam Map<String, Object> params, Sort sort)
-    {
-        List<EvaLiverMonth> list = this.liveDataService.tongJiListQuery(params, sort);
-        Page<EvaLiverMonth> page = new Page<>();
-        page.setTotal((long)list.size());
-        page.setRows(list);
-        return page;
     }
     
     @RequestMapping("delete")

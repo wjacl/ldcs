@@ -126,8 +126,14 @@ INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
 VALUES('ldcs-perfEval-update','修改','/perfEval/update','ldcs-perfEval','0',1,1224);
 INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
 VALUES('ldcs-perfEval-delete','删除','/perfEval/delete','ldcs-perfEval','0',1,1225);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfEval-ge','生成绩效数据','/perfEval/greateMonthEvaData','ldcs-perfEval','0',1,1226);
+INSERT INTO t_sys_privilege(pr_id,pr_name,Path,p_pr_id,pr_type,valid,Order_No)
+VALUES('ldcs-perfEval-export','导出','/perfEval/export','ldcs-perfEval','0',1,1227);
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-query');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-add');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-update');
 INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-delete');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-ge');
+INSERT INTO t_sys_role_priv(r_id,pr_id) VALUES('admin','ldcs-perfEval-export');

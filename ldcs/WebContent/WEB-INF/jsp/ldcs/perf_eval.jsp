@@ -17,15 +17,17 @@
 	
 	<div id="liveData_tj_tb" style="padding: 10px;height:80px">
 		<div style="margin-bottom: 5px">
+			<app:author path="/perfEval/update">
 				<a  href="#" onclick="javascript:edit();" class="easyui-linkbutton"
 					iconCls="icon-edit" plain="true">编辑</a> 
 				<a href="#" class="easyui-linkbutton" iconCls="icon-save" plain="true" onclick="javascript:save()"><s:message code='comm.save' /></a>
 				<a href="#" class="easyui-linkbutton" iconCls="icon-undo" plain="true" onclick="javascript:cancel()"><s:message code='comm.cancel' /></a>
+			</app:author>
 		</div>
 		<div>
 			<form id="liveData_tj_query_form">
 				<s:message code="liver.broker"/>:
-				<input class="easyui-combotree" name="brokerId_in_String" style="width: 160px"
+				<input class="easyui-combotree" id="brokerId_in_String" name="brokerId_in_String" style="width: 160px"
 					data-options="
 						url:'${ctx }/user/memberTree',				
 	                    multiple:true,
@@ -37,16 +39,22 @@
 					name="month_gte_intt">
 				- <input class="easyui-numberbox" style="width: 80px"
 					data-options="min:201601,value:currMonth"
-					name="month_lte_intt">
+					name="month_lte_intt">				
+			<app:author path="/perfEval/query">
 				<a
 					href="javascript:treeReload('liveData_tj_query_form','liveData_tj_grid')"
-					class="easyui-linkbutton" iconCls="icon-search">查询</a>
+					class="easyui-linkbutton" iconCls="icon-search">查询</a> 
+			</app:author>
+			<app:author path="/perfEval/greateMonthEvaData">
 				<a
 					href="javascript:greateData('liveData_tj_query_form','liveData_tj_grid')"
 					class="easyui-linkbutton" iconCls="icon-edit">生成评定数据</a>
+			</app:author>
+			<app:author path="/perfEval/export">
 				<a
 					href="javascript:doExport('liveData_tj_query_form')"
 					class="easyui-linkbutton" iconCls="icon-edit">导 出</a>
+			</app:author>
 			</form>
 		</div>
 	</div>
@@ -123,7 +131,9 @@
 	}
 	
 	function greateData(formId,gridId){
-		var v = $('#monthInput').numberbox('getValue');
+		var jsonData = $("#" + formId).serializeJson();
+		$.ad.joinArrayInObjectToString(jsonData);
+		var v = jsonData.month_gte_intt;
 		if(v == ""){
 			$.sm.alert("请在开始月份处录入要生成数据的月份！");
 			return;
@@ -133,7 +143,7 @@
 			  method:"post",
 			  async: false,
 			  dataType:"json",
-			  data:{month:v},
+			  data:{month:v,brokerId_in_String:jsonData.brokerId_in_String},
 			  success:function(data){
 				  $.sm.handleResult(data);
 				  if(data.status == $.sm.ResultStatus_Ok){
@@ -145,12 +155,7 @@
 	
 	function treeReload(formId,gridId){
 		var jsonData = $("#" + formId).serializeJson();
-		//为解决数组多值，mvc中map接收只能接收到一个的问题，而将数组转为以","间隔的字符串来传递。
-		for(var i in jsonData){
-			if(jsonData[i] instanceof Array){
-				jsonData[i] = jsonData[i].join(",");
-			}
-		}
+		$.ad.joinArrayInObjectToString(jsonData);
 		
 		$('#' + gridId).treegrid('options').url='${ctx }/perfEval/query';
 		$('#' + gridId).treegrid('load',jsonData);
@@ -225,7 +230,7 @@
 			row.perfComm = Math.round(row.comm * row.perfEval) / 100,
 			t.treegrid('refresh', editingId);
 			$.ajax({
-				  url: ctx + "/perfEval/add",
+				  url: ctx + "/perfEval/update",
 				  method:"post",
 				  async: false,
 				  dataType:"json",
@@ -275,7 +280,6 @@
 		function doExport(formId){
 			var queryParams = $("#" + formId).serializeJson();
 			$.ad.joinArrayInObjectToString(queryParams);
-			//var queryParams = $("#" + gridId).datagrid("options").queryParams;
 			$("#exportForm").form("load",queryParams);
 			$("#exportForm").form({url:ctx + "/perfEval/export"});
 			$('#exportForm').form('submit');

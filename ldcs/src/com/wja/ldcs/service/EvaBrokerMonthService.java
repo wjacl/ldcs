@@ -1,6 +1,5 @@
 package com.wja.ldcs.service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +28,11 @@ public class EvaBrokerMonthService extends CommService<EvaBrokerMonth>
     @Autowired
     private PrivilegeControlService privilegeControlService;
     
+    public EvaLiverMonth findByBrokerIdAndLiverIdAndMonth(String brokerId, String liverId, Integer month)
+    {
+        return this.evaLiverMonthDao.findByBrokerIdAndLiverIdAndMonth(brokerId, liverId, month);
+    }
+    
     public List<EvaLiverMonth> findEvaLiverMonthData(String brokerId, Integer month)
     {
         List<EvaLiverMonth> list = this.evaLiverMonthDao.findByBrokerIdAndMonth(brokerId, month);
@@ -44,13 +48,6 @@ public class EvaBrokerMonthService extends CommService<EvaBrokerMonth>
     public void batchSave(List<EvaBrokerMonth> list)
     {
         this.evaBrokerMonthDao.save(list);
-    }
-    
-    public long getMonthCount(Integer month)
-    {
-        Map<String, Object> params = new HashMap<>();
-        params.put("month_eq_intt", month);
-        return this.evaBrokerMonthDao.count(new CommSpecification<>(params));
     }
     
     public EvaBrokerMonth findByBrokerIdAndMonth(String brokerId, Integer month)
