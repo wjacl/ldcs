@@ -45,7 +45,7 @@
 					href="javascript:greateData('liveData_tj_query_form','liveData_tj_grid')"
 					class="easyui-linkbutton" iconCls="icon-edit">生成评定数据</a>
 				<a
-					href="javascript:doExport('liveData_tj_grid')"
+					href="javascript:doExport('liveData_tj_query_form')"
 					class="easyui-linkbutton" iconCls="icon-edit">导 出</a>
 			</form>
 		</div>
@@ -272,8 +272,10 @@
 			return $.ad.standardIdPidNameArrayToEasyUITree(data);
 		}
 		
-		function doExport(gridId){
-			var queryParams = $("#" + gridId).datagrid("options").queryParams;
+		function doExport(formId){
+			var queryParams = $("#" + formId).serializeJson();
+			$.ad.joinArrayInObjectToString(queryParams);
+			//var queryParams = $("#" + gridId).datagrid("options").queryParams;
 			$("#exportForm").form("load",queryParams);
 			$("#exportForm").form({url:ctx + "/perfEval/export"});
 			$('#exportForm').form('submit');
@@ -284,39 +286,6 @@
 				return value + "%";
 			}
 			return "";
-		}
-		
-		function liverFormatter(value,row,index){
-			return row.liverName? row.liverName : '';
-		}
-	
-		function brokerFormatter(value,row,index){
-			return row.brokerName ? row.brokerName : '';
-		}
-
-		function liverOrgTreeLoadFilter(data){
-			for(var i in data){
-				if(data[i].type == "liver" && data[i].origin.broker){
-					if(data[i].origin.broker.$ref)
-						data[i].origin.broker = eval(data[i].origin.broker.$ref.replace('$',"data"));
-				}
-			}
-			
-			var nodes = $.ad.standardIdPidNameArrayToEasyUITree(data);
-			removeHasNoLiverNodes(nodes);
-			return nodes;
-		}
-		
-		function removeHasNoLiverNodes(data){
-			for(var i = data.length - 1; i >= 0; i--){
-				if(data[i].type != "liver" && data[i].children != undefined){
-					removeHasNoLiverNodes(data[i].children);
-				}
-				
-				if(data[i].type != "liver" && (data[i].children == undefined || data[i].children.length == 0)){
-					data.splice(i,1);
-				}
-			}
 		}
 		
 		var today = '${appfn:today()}';
