@@ -40,13 +40,7 @@ public class PerfStandard extends CommEntity
     private BigDecimal gradeProp;
     
     /**
-     * 完成礼物目标提成基数等级值
-     */
-    @Column(name = "comm_level_base")
-    private Integer commLevelBase;
-    
-    /**
-     * 提成基数等级提成比例
+     * 保底目标提成比例
      */
     @Column(name = "comm_level_base_prop", precision = 5, scale = 2)
     private BigDecimal commLevelBaseProp;
@@ -104,16 +98,6 @@ public class PerfStandard extends CommEntity
     public void setGradeProp(BigDecimal gradeProp)
     {
         this.gradeProp = gradeProp;
-    }
-    
-    public Integer getCommLevelBase()
-    {
-        return commLevelBase;
-    }
-    
-    public void setCommLevelBase(Integer commLevelBase)
-    {
-        this.commLevelBase = commLevelBase;
     }
     
     public BigDecimal getCommLevelBaseProp()
