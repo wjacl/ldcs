@@ -15,7 +15,7 @@
 		经纪人绩效评定
 	</h3>
 	
-	<div id="liveData_tj_tb" style="padding: 10px;height:80px">
+	<div id="liveData_tj_tb" style="padding: 5px;height:70px">
 		<div style="margin-bottom: 5px">
 			<app:author path="/perfEval/update">
 				<a  href="#" onclick="javascript:edit();" class="easyui-linkbutton"

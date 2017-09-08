@@ -15,7 +15,7 @@
 		绩效评分标准管理
 	</h3>
 	
-	<div id="perfStandard_tb" style="padding: 5px; height: auto">
+	<div id="perfStandard_tb" style="padding: 5px;height:70px">
 		<div style="margin-bottom: 5px">
 			<app:author path="/perfStandard/add">
 				<a href="#" onclick="$('#perfStandard_grid').edatagrid('addRow');" class="easyui-linkbutton"
@@ -46,7 +46,6 @@
 			</form>
 		</div>
 	</div>
-
 	<table id="perfStandard_grid" 
 		data-options="rownumbers:true,singleSelect:true,pagination:true,multiSort:true,selectOnCheck:true,checkOnSelect:true,
 				sortName:'month',sortOrder:'desc',

@@ -42,6 +42,7 @@
 					data-options="
 						url:'${ctx }/user/memberTree',				
 	                    multiple:true,
+	                    panelWidth:180,
 						loadFilter:userOrgTreeLoadFilter">
 				<s:message code="liver.platform"/>
 				: <input class="easyui-textbox" style="width: 100px"
@@ -199,6 +200,7 @@
 										required:true,
 										url:'${ctx }/user/memberTree',
 										onBeforeSelect:brokerTreeBeforeSelect,
+										panelWidth:180,
 										loadFilter:userOrgTreeLoadFilter">
 							</div>
 						</td>
