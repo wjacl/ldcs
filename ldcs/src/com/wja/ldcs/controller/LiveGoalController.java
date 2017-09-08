@@ -71,8 +71,7 @@ public class LiveGoalController
             {
                 return OpResult.updateError("该月份数据已存在，不能重复录入，请修改！", c);
             }
-            this.liveGoalService.update(c);
-            return OpResult.updateOk(c);
+            return OpResult.updateOk(this.liveGoalService.update(c));
         }
     }
     

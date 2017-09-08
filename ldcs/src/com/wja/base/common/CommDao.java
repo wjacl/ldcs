@@ -24,12 +24,13 @@ public class CommDao
         }
     }
     
-    public <T> void update(T obj)
+    public <T> T update(T obj)
     {
         if (obj != null)
         {
-            em.merge(obj);
+            return em.merge(obj);
         }
+        return null;
     }
     
     public <T> T get(Class<T> clazz, Serializable id)

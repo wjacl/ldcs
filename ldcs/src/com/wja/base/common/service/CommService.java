@@ -19,9 +19,9 @@ public class CommService<T>
         this.commDao.save(obj);
     }
     
-    public void update(T obj)
+    public T update(T obj)
     {
-        this.commDao.update(obj);
+        return this.commDao.update(obj);
     }
     
     public T get(Class<T> clazz, Serializable id)

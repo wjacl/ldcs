@@ -44,11 +44,11 @@ public class DictService extends CommService<Dict>
     }
     
     @Override
-    public void update(Dict dict)
+    public Dict update(Dict dict)
     {
         Dict temp = this.get(Dict.class, dict.getId());
         temp.setName(dict.getName());
-        this.dictDao.save(temp);
+        return this.dictDao.save(temp);
     }
     
     public List<Dict> getByPid(String pid)

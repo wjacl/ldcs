@@ -50,8 +50,7 @@ public class PerfStandardController
             {
                 return OpResult.updateError("该月份数据已存在，不能重复录入，请修改！", c);
             }
-            this.perfStandardService.update(c);
-            return OpResult.updateOk(c);
+            return OpResult.updateOk(this.perfStandardService.update(c));
         }
     }
     
