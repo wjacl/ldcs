@@ -18,7 +18,7 @@
 	<div id="liveGoal_tb" style="padding: 5px; height: auto">
 		<div style="margin-bottom: 5px">
 			<app:author path="/liveGoal/add">
-				<a href="javascript:$('#liveGoal_grid').edatagrid('addRow')" class="easyui-linkbutton"
+				<a href="#" onclick="javascript:$('#liveGoal_grid').edatagrid('addRow')" class="easyui-linkbutton"
 					iconCls="icon-add" plain="true"><s:message code='comm.add' /></a> 
 			</app:author>
 			<app:author path="/liveGoal/delete">
@@ -31,10 +31,10 @@
 					href="javascript:liveDataIn.loadData()"
 					class="easyui-linkbutton" iconCls="icon-edit">批量生成录入数据</a> -->
 				<a plain="true" 
-					href="javascript:exportTemplate()"
+					 href="#" onclick="javascript:exportTemplate()"
 					class="easyui-linkbutton" iconCls="icon-down">导出录入表格</a>
 				<a plain="true" 
-					href="javascript:$('#liveData_import').form('clear');$('#liveData_w').window('open');"
+					 href="#" onclick="javascript:$('#liveData_import').form('clear');$('#liveData_w').window('open');"
 					class="easyui-linkbutton" iconCls="icon-up">Excel批量导入</a>
 			</app:author>
 		</div>

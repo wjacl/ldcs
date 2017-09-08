@@ -18,7 +18,7 @@
 	<div id="perfStandard_tb" style="padding: 5px; height: auto">
 		<div style="margin-bottom: 5px">
 			<app:author path="/perfStandard/add">
-				<a href="javascript:$('#perfStandard_grid').edatagrid('addRow')" class="easyui-linkbutton"
+				<a href="#" onclick="$('#perfStandard_grid').edatagrid('addRow');" class="easyui-linkbutton"
 					iconCls="icon-add" plain="true"><s:message code='comm.add' /></a> 
 			</app:author>
 			<app:author path="/perfStandard/delete">
