@@ -1,7 +1,6 @@
 package com.wja.ldcs.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.wja.base.common.OpResult;
 import com.wja.base.util.BeanUtil;
 import com.wja.base.util.CollectionUtil;
-import com.wja.base.util.DateUtil;
 import com.wja.base.util.Page;
-import com.wja.base.util.PoiExcelUtil.DataFormat;
 import com.wja.base.util.Sort;
 import com.wja.base.web.view.PoiExcelView;
 import com.wja.ldcs.entity.EvaBrokerMonth;
@@ -251,8 +248,9 @@ public class PerfEvalController
             ebm.setCommMess(giftComm + "");
             ebm.setGradeProp(pd.getGradeProp().doubleValue());
             ebm.setPerfEval(xperfEval);
-            ebm.setPerfEvalText("(" + xgflv + "% * " + pd.getGiftProp() + "%) + (" + xdulv + "% * "
-                + pd.getDurationProp() + "%) + " + pd.getGradeProp() + "% = " + xperfEval + "%");
+            String pft = "(" + xgflv + "% * " + pd.getGiftProp() + "%) + (" + xdulv + "% * " + pd.getDurationProp()
+                + "%) + " + pd.getGradeProp() + "% = " + xperfEval + "%";
+            ebm.setPerfEvalText(pft.replace(".00%", "%"));
             ebm.setPerfComm(Math.round(giftComm * xperfEval) / 100.0);
         }
         this.evaBrokerMonthService.batchSave(brokers);
@@ -266,114 +264,38 @@ public class PerfEvalController
         return this.evaBrokerMonthService.pageQuery(params, page);
     }
     
-    @RequestMapping("tjexport")
-    public ModelAndView tjexport(@RequestParam Map<String, Object> params, Sort sort)
-    {
-        Map<String, Object> model = new HashMap<>();
-        model.put("filename", "主播直播月度统计数据.xls");
-        model.put("sheetName", "主播直播月度统计数据");
-        String[] headers = {"序号", "主播", "经纪人", "月份", "礼物收益(元)", "礼物收益目标(元)", "礼物完成率", "礼物差距", "直播时长(分钟)", "直播时长目标(分钟)",
-            "时长完成率", "时长差距"};
-        model.put("headers", headers);
-        model.put("hasSerialColumn", true);
-        String[] fieldNames = {"ev.liverName", "ev.brokerName", "ev.month", "ev.giftEarning", "ev.giftEarningGoal",
-            "giftLv", "giftCj", "ev.liveDuration", "ev.liveDurationGoal", "duraLv", "duraCj"};
-        model.put("fieldNames", fieldNames);
-        
-        List<EvaLiverMonth> data = this.liveDataService.tongJiListQuery(params, sort);
-        List<Map<String, Object>> realList = new ArrayList<>();
-        model.put("data", realList);
-        Map<String, Object> map = null;
-        for (EvaLiverMonth ev : data)
-        {
-            map = new HashMap<>();
-            realList.add(map);
-            map.put("ev", ev);
-            
-            String giftLv = "";
-            String giftCj = "";
-            
-            // 礼物完成率 差距计算
-            if (ev.getGiftEarning() != null && ev.getGiftEarningGoal() != null)
-            {
-                try
-                {
-                    giftLv =
-                        Math.round(ev.getGiftEarning().doubleValue() / ev.getGiftEarningGoal().doubleValue() * 10000)
-                            / 100.0 + "%";
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                
-                if (ev.getGiftEarning().compareTo(ev.getGiftEarningGoal()) < 0)
-                {
-                    // giftCj =
-                    // ev.getGiftEarningGoal().subtract(ev.getGiftEarning()).toString();
-                }
-            }
-            map.put("giftLv", giftLv);
-            map.put("giftCj", giftCj);
-            
-            String duraLv = "";
-            String duraCj = "";
-            
-            // 时长完成率 差距计算
-            if (ev.getLiveDuration() != null && ev.getLiveDurationGoal() != null)
-            {
-                try
-                {
-                    duraLv =
-                        Math.round(((double)ev.getLiveDuration()) / ev.getLiveDurationGoal() * 10000) / 100.0 + "%";
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-                
-                if (ev.getLiveDuration() < ev.getLiveDurationGoal())
-                {
-                    duraCj = ev.getLiveDurationGoal() - ev.getLiveDuration() + "";
-                }
-            }
-            map.put("duraLv", duraLv);
-            map.put("duraCj", duraCj);
-        }
-        return new ModelAndView(new PoiExcelView(), model);
-    }
-    
     @RequestMapping("export")
     public ModelAndView export(@RequestParam Map<String, Object> params, Sort sort)
     {
         Map<String, Object> model = new HashMap<>();
-        model.put("filename", "主播直播数据.xls");
-        model.put("sheetName", "主播直播数据");
-        String[] headers =
-            {"序号", "主播", "经纪人", "所在平台", "直播房间号", "直播名", "日期", "订阅", "订阅增幅", "人气", "礼物收益(元)", "直播时长(分钟)", "备注"};
+        model.put("filename", "经纪人绩效数据.xls");
+        model.put("sheetName", "经纪人绩效数据");
+        String[] headers = {"序号", "经纪人", "主播", "月份", "部门评分", "评分说明", "权重得分", "礼物提成", "绩效提成", "礼物收益(元)", "礼物收益目标(元)",
+            "礼物完成率", "直播时长(分钟)", "直播时长目标(分钟)", "直播时长完成率", "礼物提成明细"};
         model.put("headers", headers);
         model.put("hasSerialColumn", true);
-        String[] fieldNames = {"liverName", "brokerName", "platform", "roomNo", "liveName", "date", "rss",
-            "rssGrowRate", "popularity", "giftEarning", "liveDuration", "remark"};
+        String[] fieldNames = {"brokerName", "liverName", "month", "gradeProp", "remark", "perfEvalText", "comm",
+            "perfComm", "giftEarning", "giftEarningGoal", "gflvText", "liveDuration", "liveDurationGoal", "dulvText",
+            "commMess"};
         model.put("fieldNames", fieldNames);
         
-        Map<String, DataFormat> dataFormatMap = new HashMap<>();
-        model.put("dataFormatMap", dataFormatMap);
-        dataFormatMap.put("date", new DataFormat()
-        {
-            @Override
-            public String format(Object v)
-            {
-                if (v != null)
-                {
-                    return DateUtil.DEFAULT_DF.format((Date)v);
-                }
-                return "";
-            }
-        });
-        
-        List<LiveData> data = this.liveDataService.listQuery(params, sort);
+        List<EvaBrokerMonth> ebmList = this.evaBrokerMonthService.listQuery(params, sort);
+        List<Object> data = new ArrayList<>();
         model.put("data", data);
+        for (EvaBrokerMonth ebm : ebmList)
+        {
+            data.add(ebm);
+            List<EvaLiverMonth> elList =
+                this.evaBrokerMonthService.findEvaLiverMonthData(ebm.getBrokerId(), ebm.getMonth());
+            if (CollectionUtil.isNotEmpty(elList))
+            {
+                for (EvaLiverMonth el : elList)
+                {
+                    el.setBrokerName("");
+                }
+                data.addAll(elList);
+            }
+        }
         return new ModelAndView(new PoiExcelView(), model);
     }
     

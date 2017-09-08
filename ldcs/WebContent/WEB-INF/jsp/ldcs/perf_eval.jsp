@@ -44,6 +44,9 @@
 				<a
 					href="javascript:greateData('liveData_tj_query_form','liveData_tj_grid')"
 					class="easyui-linkbutton" iconCls="icon-edit">生成评定数据</a>
+				<a
+					href="javascript:doExport('liveData_tj_grid')"
+					class="easyui-linkbutton" iconCls="icon-edit">导 出</a>
 			</form>
 		</div>
 	</div>
@@ -93,12 +96,12 @@
 			</tr>
 		</thead>
 	</table>
-	<form id="exportForm" action="${ctx }/liveData_tj/export" method="post">
-		<input type="hidden" name="liverId_in_String"/>
+	<form id="exportForm" action="" method="post">
+		<input type="hidden" name="brokerId_in_String"/>
 		<input type="hidden" name="month_gte_intt"/>
 		<input type="hidden" name="month_lte_intt"/>
-		<input type="hidden" name="sort" value="month,brokerId,liverId"/>
-		<input type="hidden" name="order" value="DESC,ASC,ASC"/>
+		<input type="hidden" name="sort" value="month,brokerName"/>
+		<input type="hidden" name="order" value="DESC,ASC"/>
 	</form>
 	<script type="text/javascript">	
 	var msta = null;
@@ -142,11 +145,6 @@
 	
 	function treeReload(formId,gridId){
 		var jsonData = $("#" + formId).serializeJson();
-		/* getMonthPerfStandard(jsonData.month_eq_intt);
-		if(msta == null || msta == "null"){
-			$.sm.alert(jsonData.month_eq_intt + "月的绩效标准尚无制定，不可进行评定！");
-			return;
-		} */
 		//为解决数组多值，mvc中map接收只能接收到一个的问题，而将数组转为以","间隔的字符串来传递。
 		for(var i in jsonData){
 			if(jsonData[i] instanceof Array){
@@ -277,7 +275,7 @@
 		function doExport(gridId){
 			var queryParams = $("#" + gridId).datagrid("options").queryParams;
 			$("#exportForm").form("load",queryParams);
-			$("#exportForm").form({url:ctx + "/liveData/tjexport"});
+			$("#exportForm").form({url:ctx + "/perfEval/export"});
 			$('#exportForm').form('submit');
 		}
 		
