@@ -151,13 +151,19 @@ public class LiveDataController
         Map<String, Object> model = new HashMap<>();
         model.put("filename", "主播直播月度统计数据.xls");
         model.put("sheetName", "主播直播月度统计数据");
-        String[] headers = {"序号", "主播", "经纪人", "月份", "礼物收益(元)", "礼物收益目标(元)", "礼物完成率", "礼物差距", "直播时长(分钟)", "直播时长目标(分钟)",
-            "时长完成率", "时长差距"};
+        String[] headers =
+            {"序号", "主播", "经纪人", "月份", "礼物收益(元)", "礼物收益目标(元)", "礼物完成率", "礼物差距", "直播时长", "直播时长目标", "时长完成率", "时长差距"};
         model.put("headers", headers);
         model.put("hasSerialColumn", true);
         String[] fieldNames = {"ev.liverName", "ev.brokerName", "ev.month", "ev.giftEarning", "ev.giftEarningGoal",
             "giftLv", "giftCj", "ev.liveDuration", "ev.liveDurationGoal", "duraLv", "duraCj"};
         model.put("fieldNames", fieldNames);
+        
+        Map<String, DataFormat> dataFormatMap = new HashMap<>();
+        model.put("dataFormatMap", dataFormatMap);
+        LiveDurationFormat ldf = new LiveDurationFormat();
+        dataFormatMap.put("ev.liveDuration", ldf);
+        dataFormatMap.put("ev.liveDurationGoal", ldf);
         
         List<EvaLiverMonth> data = this.liveDataService.tongJiListQuery(params, sort);
         List<Map<String, Object>> realList = new ArrayList<>();
@@ -228,7 +234,7 @@ public class LiveDataController
         model.put("filename", "主播直播数据.xls");
         model.put("sheetName", "主播直播数据");
         String[] headers =
-            {"序号", "主播", "经纪人", "所在平台", "直播房间号", "直播名", "日期", "订阅", "订阅增幅", "人气", "礼物收益(元)", "直播时长(分钟)", "备注"};
+            {"序号", "主播", "经纪人", "所在平台", "直播房间号", "直播名", "日期", "订阅", "订阅增幅", "人气", "礼物收益(元)", "直播时长", "备注"};
         model.put("headers", headers);
         model.put("hasSerialColumn", true);
         String[] fieldNames = {"liverName", "brokerName", "platform", "roomNo", "liveName", "date", "rss",
@@ -249,6 +255,8 @@ public class LiveDataController
                 return "";
             }
         });
+        
+        dataFormatMap.put("liveDuration", new LiveDurationFormat());
         
         List<LiveData> data = this.liveDataService.listQuery(params, sort);
         model.put("data", data);

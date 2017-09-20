@@ -84,7 +84,7 @@
 					data-options="field:'perfComm',width:80,align:'right',
 						styler:zhuozhongStyle">绩效提成</th>
 				<th colspan="3">礼物收益完成情况(元)</th>
-				<th colspan="3">直播时长完成情况(分钟)</th>
+				<th colspan="3">直播时长完成情况</th>
 				<th rowspan="2"
 					data-options="field:'commMess',width:'auto'">礼物提成明细</th>
 			</tr>
@@ -96,9 +96,9 @@
 				<th
 					data-options="field:'gflvText',width:80,align:'right'">完成率</th>
 				<th
-					data-options="field:'liveDuration',width:70,align:'right'">时长</th>
+					data-options="field:'liveDuration',width:80,align:'right',formatter:ldcsComm.minuteFormat">完成时长</th>
 				<th
-					data-options="field:'liveDurationGoal',width:70,align:'right'">目标</th>
+					data-options="field:'liveDurationGoal',width:80,align:'right',formatter:ldcsComm.minuteFormat">目标</th>
 				<th
 					data-options="field:'dulvText',width:80,align:'right'">完成率</th>
 			</tr>

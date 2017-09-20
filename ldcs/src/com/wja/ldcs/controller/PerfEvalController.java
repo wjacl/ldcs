@@ -16,6 +16,7 @@ import com.wja.base.common.OpResult;
 import com.wja.base.util.BeanUtil;
 import com.wja.base.util.CollectionUtil;
 import com.wja.base.util.Page;
+import com.wja.base.util.PoiExcelUtil.DataFormat;
 import com.wja.base.util.Sort;
 import com.wja.base.web.view.PoiExcelView;
 import com.wja.ldcs.entity.EvaBrokerMonth;
@@ -304,13 +305,18 @@ public class PerfEvalController
         model.put("filename", "经纪人绩效数据.xls");
         model.put("sheetName", "经纪人绩效数据");
         String[] headers = {"序号", "经纪人", "主播", "月份", "部门评分", "评分说明", "权重得分", "礼物提成", "绩效提成", "礼物收益(元)", "礼物收益目标(元)",
-            "礼物完成率", "直播时长(分钟)", "直播时长目标(分钟)", "直播时长完成率", "礼物提成明细"};
+            "礼物完成率", "直播时长", "直播时长目标", "直播时长完成率", "礼物提成明细"};
         model.put("headers", headers);
         model.put("hasSerialColumn", true);
         String[] fieldNames = {"brokerName", "liverName", "month", "gradeProp", "remark", "perfEvalText", "comm",
             "perfComm", "giftEarning", "giftEarningGoal", "gflvText", "liveDuration", "liveDurationGoal", "dulvText",
             "commMess"};
         model.put("fieldNames", fieldNames);
+        Map<String, DataFormat> dataFormatMap = new HashMap<>();
+        model.put("dataFormatMap", dataFormatMap);
+        LiveDurationFormat ldf = new LiveDurationFormat();
+        dataFormatMap.put("liveDuration", ldf);
+        dataFormatMap.put("liveDurationGoal", ldf);
         
         List<EvaBrokerMonth> ebmList = this.evaBrokerMonthService.listQuery(params, sort);
         List<Object> data = new ArrayList<>();
