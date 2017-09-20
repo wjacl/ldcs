@@ -1,11 +1,23 @@
+//采用jquery easyui loading css效果   
+function ajaxLoading(){   
+    $("<div class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body");   
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({display:"block",left:($(document.body).outerWidth(true) - 190) / 2,top:($(window).height() - 45) / 2});   
+ }   
+ function ajaxLoadEnd(){   
+     $(".datagrid-mask").remove();   
+     $(".datagrid-mask-msg").remove();               
+}
+
 /**
 	jquery ajax 全局设置
 	在此js中主要设置当用户session失效、鉴权不通过时的ajax请求的处理。
 */
 $.ajaxSetup({traditional:true});
-
+$( document ).ajaxStart(function(){
+	ajaxLoading();
+});
 $( document ).ajaxComplete(function( event, xhr, settings ) {
-	
+	ajaxLoadEnd();
 	if(xhr.status == 401){ //未认证
 		if(document.getElementById('loginDialog')) {
 			$('#loginDialog').dialog({
