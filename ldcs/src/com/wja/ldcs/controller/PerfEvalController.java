@@ -153,7 +153,7 @@ public class PerfEvalController
         }
     }
     
-    private void greateAndSaveEvalData(List<EvaLiverMonth> list, Integer month, PerfStandard pd)
+    private synchronized void greateAndSaveEvalData(List<EvaLiverMonth> list, Integer month, PerfStandard pd)
     {
         String lastPid = null;
         EvaLiverMonth lastRow = null;
