@@ -4,6 +4,11 @@
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:application.xml</param-value>
   </context-param>
+  <!-- 默认国际化语言，该参数用于默认js国际化脚本的加载。如没配，则默认是zh_CN-->
+  <context-param>
+    <param-name>default_lang</param-name>
+    <param-value>zh_CN</param-value>
+  </context-param>
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>

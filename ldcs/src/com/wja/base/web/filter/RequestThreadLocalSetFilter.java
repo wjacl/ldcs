@@ -1,6 +1,8 @@
 package com.wja.base.web.filter;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -24,6 +26,9 @@ import com.wja.base.web.RequestThreadLocal;
 @WebFilter("/*")
 public class RequestThreadLocalSetFilter implements Filter
 {
+    private Map<String, String> langResources = new HashMap<>();
+    
+    private String default_lang = "zh_CN";
     
     /**
      * Default constructor.
@@ -66,7 +71,21 @@ public class RequestThreadLocalSetFilter implements Filter
             {
                 lang += "_" + httpRequest.getLocale().getCountry();
             }
-            httpRequest.setAttribute(CommConstants.SESSION_LANG, lang);
+            String realLang = this.langResources.get(lang);
+            if (realLang == null)
+            {
+                if (this.getClass().getClassLoader().getResource("i18n/message_" + lang + ".properties") == null)
+                {
+                    realLang = this.default_lang;
+                }
+                else
+                {
+                    realLang = lang;
+                }
+                this.langResources.put(lang, realLang);
+            }
+            
+            httpRequest.setAttribute(CommConstants.SESSION_LANG, realLang);
         }
         
         // pass the request along the filter chain
@@ -80,7 +99,11 @@ public class RequestThreadLocalSetFilter implements Filter
     public void init(FilterConfig fConfig)
         throws ServletException
     {
-        // TODO Auto-generated method stub
+        String dlang = fConfig.getServletContext().getInitParameter("default_lang");
+        if (StringUtils.isNotBlank(dlang))
+        {
+            this.default_lang = dlang;
+        }
     }
     
 }
