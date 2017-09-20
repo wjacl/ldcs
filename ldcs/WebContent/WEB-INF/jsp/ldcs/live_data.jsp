@@ -131,7 +131,7 @@
 							max:99999999.99}}"><s:message
 						code="liveData.giftEarning"/></th>
 				<th
-					data-options="field:'liveDuration',width:90,editor:'numberbox'"><s:message
+					data-options="field:'liveDuration',width:90,editor:'numberbox',formatter:ldcsComm.minuteFormat"><s:message
 						code="liveData.liveDuration"/></th>
 				<th
 					data-options="field:'remark',width:140,editor:{type:'textarea',

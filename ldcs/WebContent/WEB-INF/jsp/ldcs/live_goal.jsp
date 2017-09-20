@@ -117,7 +117,7 @@
 							min:0,
 							max:99999999.99}}">礼物收益目标(元)</th>
 				<th
-					data-options="field:'liveDuration',width:120,editor:'numberbox'">直播时长目标(分钟)</th>
+					data-options="field:'liveDuration',width:120,editor:'numberbox',formatter:ldcsComm.minuteFormat">直播时长目标(分钟)</th>
 				<th
 					data-options="field:'remark',width:240,editor:{type:'textarea',
 						options:{

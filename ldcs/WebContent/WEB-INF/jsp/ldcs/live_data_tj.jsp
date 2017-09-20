@@ -70,9 +70,9 @@
 				<th
 					data-options="field:'brokerName',width:80,formatter:girfLastFormatter">礼物差距</th>
 				<th
-					data-options="field:'liveDuration',width:100">直播时长(分钟)</th>
+					data-options="field:'liveDuration',width:100,formatter:ldcsComm.minuteFormat">直播时长</th>
 				<th
-					data-options="field:'liveDurationGoal',width:120">直播时长目标(分钟)</th>
+					data-options="field:'liveDurationGoal',width:120,formatter:ldcsComm.minuteFormat">直播时长目标</th>
 				<th
 					data-options="field:'liverName',width:80,formatter:duraPercFormatter">时长完成率</th>
 				<th
@@ -121,7 +121,7 @@
 		function duraLastFormatter(value,row,index){
 			if(row.liveDuration && row.liveDurationGoal){
 				if(row.liveDuration < row.liveDurationGoal){
-					return row.liveDurationGoal - row.liveDuration;
+					return ldcsComm.minuteFormat(row.liveDurationGoal - row.liveDuration);
 				}
 			}
 			return "";
